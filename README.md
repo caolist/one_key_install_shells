@@ -1,0 +1,2 @@
+# one_key_install_shells
+一键安装常见软件的shell
