@@ -96,7 +96,7 @@ mysql -u root -proot -e "use mysql;"
 mysql -u root -proot -e "update user set host = '%' where user ='root';"
 
 # 删除 mysql 相关安装包
-cd mysql_ins_home
-rm -rf mysql*.rpm
+cd $mysql_ins_home
+rm -rf mysql-community-*.rpm
 
 echo "-----------------------完成安装 mysql----------------------"
