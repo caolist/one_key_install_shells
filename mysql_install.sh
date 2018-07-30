@@ -69,7 +69,7 @@ service mysqld start
 # 检查 mysal 服务是否启动成功
 is_mysql_running=`service mysqld status | grep -i "running" | wc -l`
 
-if test[ $is_mysql_running = "1" ] ; then
+if test $is_mysql_running = "1" ; then
 	echo 'mysql 服务正在运行'
 else
 	echo 'mysql 服务没有运行，请检查'
