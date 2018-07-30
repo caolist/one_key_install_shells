@@ -1,10 +1,10 @@
 #/bin/sh
 # created by caoli 2018/07/27
 # -----------------------------------------------------------------------------
-# shell script to install MySQL (default version mysql-community-5.7.9)
+# shell script for install MySQL (default version 5.7.9)
 # -----------------------------------------------------------------------------
 
-#设置调试模式
+# 设置调试模式
 #set -x
 
 echo "-----------------------开始安装 mysql----------------------"
