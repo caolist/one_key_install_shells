@@ -18,44 +18,44 @@ mysql_instlog="`pwd`"/"$mysql_instlog"
 
 # 检查是否安装 mysql，若安装，进行删除
 for i in `rpm -qa | grep "mysql"`
-do 
-  rpm -e --allmatches $i --nodeps
+do
+	rpm -e --allmatches $i --nodeps
 done
 
 # 检查是否安装 mariadb，若安装，进行删除
 for i in $(rpm -qa | grep mariadb | grep -v grep)
 do
-  echo "删除 rpm --> "$i
-  rpm -e --nodeps $i
+	echo "删除 rpm -- > "$i
+	rpm -e --nodeps $i
 done
 
 # 检查是否安装 postfix，若安装，进行删除
 for i in $(rpm -qa | grep postfix | grep -v grep)
 do
-  echo "删除 rpm --> "$i
-  rpm -e --nodeps $i
+	echo "删除 rpm -- > "$i
+	rpm -e --nodeps $i
 done
 
 # 安装 mysql
 rpm -qa | grep "net-tools"
-if [ $? != 0 ];then
-rpm -ivh net-tools-2.0-0.22.20131004git.el7.x86_64.rpm
+if test $? != 0 ;then
+	rpm -ivh net-tools-2.0-0.22.20131004git.el7.x86_64.rpm
 fi
 
 tar -xvf mysql-5.7.9-1.el7.x86_64.rpm-bundle.tar
-rpm -ivh mysql-community-common-5.7.9-1.el7.x86_64.rpm 
-rpm -ivh mysql-community-libs-5.7.9-1.el7.x86_64.rpm 
-rpm -ivh mysql-community-libs-compat-5.7.9-1.el7.x86_64.rpm 
-rpm -ivh mysql-community-client-5.7.9-1.el7.x86_64.rpm 
+rpm -ivh mysql-community-common-5.7.9-1.el7.x86_64.rpm
+rpm -ivh mysql-community-libs-5.7.9-1.el7.x86_64.rpm
+rpm -ivh mysql-community-libs-compat-5.7.9-1.el7.x86_64.rpm
+rpm -ivh mysql-community-client-5.7.9-1.el7.x86_64.rpm
 rpm -ivh mysql-community-server-5.7.9-1.el7.x86_64.rpm
 
 # 检查是否成功安装 mysql
 rpm -qa | grep "mysql"
-if [ $? != 0 ];then
-echo "mysql 安装失败"| tee $mysql_instlog
-exit 1
-else 
-echo "mysql 安装成功"| tee $mysql_instlog
+if test $? != 0 ;then
+	echo "mysql 安装失败"| tee $mysql_instlog
+	exit 1
+else
+	echo "mysql 安装成功"| tee $mysql_instlog
 fi
 
 # 设置 mysql 参数
@@ -69,11 +69,11 @@ service mysqld start
 # 检查 mysal 服务是否启动成功
 is_mysql_running=`service mysqld status | grep -i "running" | wc -l`
 
-if [[ $is_mysql_running = "1" ]] ; then
-        echo 'mysql 服务正在运行'
+if test[ $is_mysql_running = "1" ] ; then
+	echo 'mysql 服务正在运行'
 else
-        echo 'mysql 服务没有运行，请检查'
-        exit
+	echo 'mysql 服务没有运行，请检查'
+	exit
 fi
 
 # 配置 mysql
