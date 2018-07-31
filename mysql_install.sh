@@ -4,6 +4,11 @@
 # shell script for install MySQL (default version 5.7.9)
 # -----------------------------------------------------------------------------
 
+if [[ "root" != `whoami` ]] ; then
+    echo "请使用 root 用户执行!"
+    exit
+fi
+
 # 设置调试模式
 #set -x
 
