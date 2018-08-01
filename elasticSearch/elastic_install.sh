@@ -13,8 +13,8 @@ fi
 set -x
 
 # 脚本参数解析
-if [[ $# < 5 ]] ; then
-    echo "Usage: $0 1.es username 2.es cluster name 3.es node config file path(file content format as follows:) 4.es setup tar file 5.es version"
+if [[ $# < 4 ]] ; then
+    echo "Usage: $0 1.es username 2.es cluster name 3.es node config file path(file content format as follows:) 4.es version"
     echo "1.host name 2.node name 3.es home 4.data path(multi) 5.log path 6.is master node 7.is data node 8.network host 9.http port 10.transport tcp port 11.java memory size"
     echo "example:"
     echo "node01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 4g"
@@ -23,7 +23,9 @@ if [[ $# < 5 ]] ; then
 fi
 
 # es 版本号
-es_version=$5
+es_version=$4
+
+echo $es_version
 
 # 读取配置文件中的所有 es 节点名称
 while read line || [ -n "$line" ]
@@ -35,6 +37,8 @@ do
         zen_hosts=${zen_hosts}","${one_host}
     fi
 done < $3
+
+echo $zen_hosts
 
 echo "-----------------------开始安装 elasticSearch----------------------"
 
@@ -59,8 +63,12 @@ do
     transport_tcp_port=`echo ${line} | awk '{print $10}'`
     java_mem_size=`echo ${line} | awk '{print $11}'`
     
-    echo "$node节点安装 es..."
+    echo "$node 节点安装 es..."
     scp -r elasticsearch-${es_version} $host_name:$es_home
+    
+    # 拷贝环境配置脚本以及启动脚本
+    scp elastic_install_env.sh $host_name:/opt/temp_scripts/elastic_install_env.sh
+    scp elastic_install_start.sh $host_name:/opt/temp_scripts/elastic_install_start.sh
     
     # 修改各配置项
     sed -i -e "/^#cluster.name:/Ic\cluster.name: ${cluster_name}" \
@@ -72,46 +80,25 @@ do
     -e "/http.port:/a\#\\n# Set a tcp port for inner transport\\n#\\ntransport.tcp.port:  ${transport_tcp_port}" \
     -e "/^#discovery.zen.ping.unicast.hosts:/Ic\discovery.zen.ping.unicast.hosts: [${zen_hosts}]" \
     -e "/^#action.destructive_requires_name:/Ic\action.destructive_requires_name: true" \
-    -e "/^#bootstrap.memory_lock/Ic\bootstrap.memory_lock: true" ${es_home}/elasticsearch-${es_version}/config/elasticsearch.yml
-    cat << EOF >> ${es_home}/elasticsearch-${es_version}/config/elasticsearch.yml
+    -e "/^#bootstrap.memory_lock/Ic\bootstrap.memory_lock: true" ${es_home}/config/elasticsearch.yml
+    
+    cat << EOF >> ${es_home}/config/elasticsearch.yml
     node.master: $is_master_node
     node.data: $is_data_node
     http.cors.enabled: true
     http.cors.allow-origin: "*"
 EOF
     
-    # 添加 es 用户，建立数据日志目录并赋予权限
-    ssh -tt root@$host_name "groupadd $1"
-    ssh -tt root@$host_name "useradd -r -g $1 $1"
-    ssh -tt root@$host_name "chown $1:$1 -R ${es_home}"
-    ssh -tt root@$host_name "chmod 755 ${es_home}/elasticsearch-${es_version}/bin/elasticsearch"
-    ssh -tt root@$host_name "mkdir -p ${data_path} ${log_path}"
-    ssh -tt root@$host_name "chown $1:$1 -R ${data_path} ${log_path}"
-    ssh -tt root@$host_name "chmod -R 755 ${data_path} ${log_path}"
-    
-    # 启动 es 服务
-    echo "$host_name节点启动 es..."
-    ssh -tt root@$host_name << EOF
-        su - es
-        ${ES_INSTALL_HOME}elasticsearch-6.3.2/bin/elasticsearch -d
-        exit
+    # 添加 es 用户，建立数据日志目录并赋予权限,接着启动 es 服务
+    ssh -tt root@${host_name} << EOF
+    sh /opt/temp_scripts/elastic_install_env.sh $1 $es_home $data_path $log_path
+    sh /opt/temp_scripts/elastic_install_start.sh
+
+    rm -rf /opt/temp_scripts
 EOF
-    
-    sleep 30
-    
-    # 通过 curl 访问 es 服务判断 elasticSearch 服务器是否正常运行
-    is_es_running='curl -XGET $node:9200 | grep -i "master" | wc -l'
-    if test $is_es_running = "1" ; then
-        echo "$host_name节点 es 服务正在运行"
-    else
-        echo "$host_name节点 es 服务没有运行"
-        exit
-    fi
-    
 done
 
 # 删除 es 安装文件
-echo "-----------------------删除 elasticSearch 安装文件----------------------"
-rm -rf elasticsearch-6.3.2.tar.gz
+rm -rf elasticsearch-${es_version}
 
 echo "-----------------------完成安装 elasticSearch----------------------"
