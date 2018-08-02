@@ -26,7 +26,6 @@ fi
 
 # es 版本号
 es_version=$4
-
 echo $es_version
 
 # 读取配置文件中的所有 es 节点名称
