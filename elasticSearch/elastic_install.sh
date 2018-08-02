@@ -52,7 +52,7 @@ do
     # 读取 es 配置文件参数值
     cluster_name=$2
     host_name=`echo ${line} | awk '{print $1}'`
-    mode_name=`echo ${line} | awk '{print $2}'`
+    node_name=`echo ${line} | awk '{print $2}'`
     es_home=`echo ${line} | awk '{print $3}'`
     data_path=`echo ${line} | awk '{print $4}'`
     log_path=`echo ${line} | awk '{print $5}'`
@@ -63,38 +63,29 @@ do
     transport_tcp_port=`echo ${line} | awk '{print $10}'`
     java_mem_size=`echo ${line} | awk '{print $11}'`
     
-    echo "$node 节点安装 es..."
+    echo "$host_name 节点安装 es..."
     scp -r elasticsearch-${es_version} $host_name:$es_home
     
     # 拷贝环境配置脚本以及启动脚本
-    scp elastic_install_env.sh $host_name:/opt/temp_scripts/elastic_install_env.sh
-    scp elastic_install_start.sh $host_name:/opt/temp_scripts/elastic_install_start.sh
-    
-    # 修改各配置项
-    sed -i -e "/^#cluster.name:/Ic\cluster.name: ${cluster_name}" \
-    -e "/^#node.name:/Ic\node.name: ${mode_name}" \
-    -e "/^#path.data:/Ic\path.data: ${data_path}" \
-    -e "/^#path.logs:/Ic\path.logs: ${log_path}" \
-    -e "/^#network.host:/Ic\network.host: ${network_host}" \
-    -e "/^#http.port:/Ic\http.port: ${http_port}" \
-    -e "/http.port:/a\#\\n# Set a tcp port for inner transport\\n#\\ntransport.tcp.port:  ${transport_tcp_port}" \
-    -e "/^#discovery.zen.ping.unicast.hosts:/Ic\discovery.zen.ping.unicast.hosts: [${zen_hosts}]" \
-    -e "/^#action.destructive_requires_name:/Ic\action.destructive_requires_name: true" \
-    -e "/^#bootstrap.memory_lock/Ic\bootstrap.memory_lock: true" ${es_home}/config/elasticsearch.yml
-    
-    cat << EOF >> ${es_home}/config/elasticsearch.yml
-    node.master: $is_master_node
-    node.data: $is_data_node
-    http.cors.enabled: true
-    http.cors.allow-origin: "*"
-EOF
+    scp elastic_install_env.sh $host_name:/opt/elastic_install_env.sh
+    scp elastic_install_config.sh $host_name:/opt/elastic_install_config.sh
+    scp elastic_install_jvm.sh $host_name:/opt/elastic_install_jvm.sh
     
     # 添加 es 用户，建立数据日志目录并赋予权限,接着启动 es 服务
-    ssh -tt root@${host_name} << EOF
-    sh /opt/temp_scripts/elastic_install_env.sh $1 $es_home $data_path $log_path
-    sh /opt/temp_scripts/elastic_install_start.sh
+    ssh -t root@${host_name} << EOF
+sh /opt/elastic_install_env.sh $1 $es_home $data_path $log_path
+sh /opt/elastic_install_config.sh $cluster_name $node_name $data_path $log_path $network_host $http_port $transport_tcp_port $zen_hosts $es_home $is_master_node $is_master_node
+sh /opt/elastic_install_jvm.sh ${es_home}"/config/jvm.options" $java_mem_size
 
-    rm -rf /opt/temp_scripts
+rm -rf /opt/elastic_install_env.sh
+rm -rf /opt/elastic_install_config.sh
+rm -rf /opt/elastic_install_jvm.sh
+
+su - $1
+chmod 755 ${es_home}"/bin/elasticsearch"
+${es_home}/bin/elasticsearch -d
+exit
+exit
 EOF
 done
 

@@ -16,9 +16,8 @@ passwd $1 << EOF
 $1
 $1
 EOF
+    echo "1.Es user:$1 is created."
 fi
-
-echo "1.Es user:$1 is created."
 
 # 2.init folder
 for data_path in `echo $3 | awk -F "," '{for(i=1;i<=NF;i++){print $i}}'`
@@ -30,7 +29,6 @@ do
     chmod -R 755 ${data_path}
 done
 
-
 if [[ ! -e $4 ]] ; then
     mkdir -p $4
 fi
@@ -38,4 +36,7 @@ fi
 chown -R $1:$1 $4
 chmod -R 755 $4
 
-echo "ES data:$3, Es log:$4 are created."
+chown -R $1:$1 $2
+chown -R $1:$1 $(dirname $4)
+
+echo "ES data:$3, ES log:$4 are created."
