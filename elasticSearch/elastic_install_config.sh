@@ -25,7 +25,7 @@ sed -i -e "/^#cluster.name:/Ic\cluster.name: $1" \
 
 shift 9
 
-    cat << EOF >> ${es_home}/config/elasticsearch.yml
+cat << EOF >> ${es_home}/config/elasticsearch.yml
 node.master: $1
 node.data: $2
 http.cors.enabled: true

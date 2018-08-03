@@ -12,7 +12,7 @@ fi
 # 1.create es user
 if [[ `cat /etc/passwd | grep -i ^$1: | wc -l` == 0 ]] ; then
     useradd -m -f -1 -s "/bin/bash" $1
-passwd $1 << EOF
+    passwd $1 << EOF
 $1
 $1
 EOF

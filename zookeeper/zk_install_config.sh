@@ -40,6 +40,8 @@ echo 'export ZOOKEEPER_HOME' >> /etc/profile
 echo 'export PATH' >> /etc/profile
 source /etc/profile
 
+echo "-----------------------启动 zookeeper 服务----------------------"
 sh $1/bin/zkServer.sh start
 
+echo "-----------------------查看 zookeeper 服务状态----------------------"
 sh $1/bin/zkServer.sh status

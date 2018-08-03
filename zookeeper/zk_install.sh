@@ -10,7 +10,7 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 设置调试模式
-set -x
+# set -x
 
 # 脚本参数解析
 if [[ $# < 2 ]] ; then
@@ -72,6 +72,7 @@ do
     # 增加 dataDir dataLogDir
     # 添加server.0、server.1、server.2...
     # data 目录下创建 myid 文件，并添加内容
+    echo "-----------------------配置 zookeeper----------------------"
     ssh -t root@${host_name} << EOF
 sh /opt/zk_install_config.sh $zk_home $data_path $log_path $zk_hosts $zk_myid
 
