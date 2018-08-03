@@ -25,7 +25,7 @@ if [[ $# < 2 ]] ; then
     exit
 fi
 
-# es 版本号
+# zk 版本号
 zk_version=$2
 echo $zk_version
 
@@ -33,10 +33,12 @@ echo $zk_version
 while read line || [ -n "$line" ]
 do
     one_host=`echo ${line} | awk '{print $1}'`
+    one_port1=`echo ${line} | awk '{print $2}'`
+    one_port2=`echo ${line} | awk '{print $3}'`
     if [ -z ${zk_hosts} ] ; then
-        zk_hosts=${one_host}
+        zk_hosts=${one_host}:${one_port1}:${one_port2}
     else
-        zk_hosts=${zk_hosts}","${one_host}
+        zk_hosts=${zk_hosts}","${one_host}:${one_port1}:${one_port2}
     fi
 done < $1
 
@@ -62,36 +64,18 @@ do
     echo "$host_name 节点安装 zk..."
     scp -r zookeeper-${zk_version} $host_name:$zk_home
     
+    # 拷贝环境配置脚本以及启动脚本
+    scp zk_install_config.sh $host_name:/opt/zk_install_config.sh
+    
     # 拷贝 zookeeper 中 conf 目录下的 zoo_sample.cfg 为 zoo.cfg
     # 删除原 dataDir
     # 增加 dataDir dataLogDir
     # 添加server.0、server.1、server.2...
     # data 目录下创建 myid 文件，并添加内容
     ssh -t root@${host_name} << EOF
-cp ${zk_home}/conf/zoo_sample.cfg ${zk_home}/conf/zoo.cfg
-sed -i '/dataDir/d' ${zk_home}/conf/zoo.cfg
-mkdir -p log_path
-mkdir -p zk_myid
-echo 'dataDir='${data_path}'' >> zoo.cfg
-echo 'dataLogDir='${log_path}'' >> zoo.cfg
+sh /opt/zk_install_config.sh $zk_home $data_path $log_path $zk_hosts $zk_myid
 
-i=1
-for ip in $zk_hosts
-do
-    echo 'server.'$i'='$ip':2888:3888' >> zoo.cfg
-    i=$(($i+1))
-done
-
-touch ${data_path}/myid
-echo $zk_myid > ${data_path}/myid
-
-echo 'ZOOKEEPER_HOME='$1'' >> /etc/profile
-echo 'PATH=$PATH:$ZOOKEEPER_HOME/bin' >> /etc/profile
-echo 'export ZOOKEEPER_HOME' >> /etc/profile
-echo 'export PATH' >> /etc/profile
-source /etc/profile
-
-sh ${zk_home}/bin/zkServer.sh start
+rm -rf /opt/zk_install_config.sh
 EOF
 done
 
