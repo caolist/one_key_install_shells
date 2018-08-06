@@ -1,0 +1,3 @@
+node01 /opt/kafka 0
+node02 /opt/kafka 0
+node05 /opt/kafka 0

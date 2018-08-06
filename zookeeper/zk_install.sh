@@ -75,7 +75,6 @@ do
     echo "-----------------------配置 zookeeper----------------------"
     ssh -t root@${host_name} << EOF
 sh /opt/zk_install_config.sh $zk_home $data_path $log_path $zk_hosts $zk_myid
-
 rm -rf /opt/zk_install_config.sh
 EOF
 done

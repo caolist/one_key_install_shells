@@ -1,5 +1,5 @@
 #!/bin/bash
-if [[ $# < 5 ]] ; then
+if [[ $# < 4 ]] ; then
     echo "Usage: $0 1.zk_home 2.data_path 3.log_path 4.zk_hosts 5.myid"
     exit
 fi
