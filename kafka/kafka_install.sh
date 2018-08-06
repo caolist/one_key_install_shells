@@ -17,7 +17,7 @@ if [[ $# < 2 ]] ; then
     echo "Usage: $0 1.kafka node config file path(file content format as follows:) 2.kafka version"
     echo "example:"
     echo "./kafka_install.sh kafka_config 2.11-2.0.0"
-    echo "1.host_name 2.kafka_home 3.port 34.broker_id"
+    echo "1.host_name 2.kafka_home 3.zk_port 34.broker_id"
     echo "example:"
     echo "node01 /opt/kafka 2181 1"
     echo "node02 /opt/kafka 2181 2"
@@ -38,6 +38,7 @@ do
         kafka_hosts=${one_host}:${one_port}
     else
         kafka_hosts=${kafka_hosts}","${one_host}:${one_port}
+    fi
 done < $1
 
 echo $kafka_hosts
@@ -54,6 +55,10 @@ do
     host_name=`echo ${line} | awk '{print $1}'`
     kafka_home=`echo ${line} | awk '{print $2}'`
     broker_id=`echo ${line} | awk '{print $4}'`
+    
+    echo $host_name
+    echo $kafka_home
+    echo $broker_id
     
     echo "$host_name 节点安装 kafka..."
     scp -r kafka_${kafka_version} $host_name:$kafka_home
