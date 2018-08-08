@@ -61,7 +61,7 @@ do
     echo $broker_id
     
     echo "$host_name 节点安装 kafka..."
-    scp -r kafka_${kafka_version} $host_name:$kafka_home
+    scp -r kafka_${kafka_version}/* $host_name:$kafka_home
     
     # 拷贝环境配置脚本以及启动脚本
     scp kafka_install_config.sh $host_name:/opt/kafka_install_config.sh

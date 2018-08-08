@@ -1,0 +1,6 @@
+elasticsearch
+mysql
+kafka
+tomcat 8.5.32 /opt/tomcat 8090 
+logstash
+ilog
