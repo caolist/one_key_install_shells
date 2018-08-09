@@ -51,16 +51,16 @@ tar -zxvf kafka_${kafka_version}.tgz
 cat $1 | while read line || [ -n "$line" ]
 do
     
-    # 读取 zk 配置文件参数值
+    # 读取 kafka 配置文件参数值
     host_name=`echo ${line} | awk '{print $1}'`
     kafka_home=`echo ${line} | awk '{print $2}'`
     broker_id=`echo ${line} | awk '{print $4}'`
     
-    echo $host_name
-    echo $kafka_home
-    echo $broker_id
-    
     echo "$host_name 节点安装 kafka..."
+    ssh -t root@${host_name} << EOF
+mkdir -p $kafka_home
+EOF
+    
     scp -r kafka_${kafka_version}/* $host_name:$kafka_home
     
     # 拷贝环境配置脚本以及启动脚本

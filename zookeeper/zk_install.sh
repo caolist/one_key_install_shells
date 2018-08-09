@@ -62,6 +62,9 @@ do
     zk_myid=`echo ${line} | awk '{print $7}'`
     
     echo "$host_name 节点安装 zk..."
+    ssh -t root@${host_name} << EOF
+mkdir -p $zk_home
+EOF
     scp -r zookeeper-${zk_version}/* $host_name:$zk_home
     
     # 拷贝环境配置脚本以及启动脚本

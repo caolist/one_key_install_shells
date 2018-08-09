@@ -65,6 +65,9 @@ do
     java_mem_size=`echo ${line} | awk '{print $11}'`
     
     echo "$host_name 节点安装 es..."
+    ssh -t root@${host_name} << EOF
+mkdir -p $es_home
+EOF
     scp -r elasticsearch-${es_version}/* $host_name:$es_home
     
     # 拷贝环境配置脚本以及启动脚本
