@@ -9,6 +9,9 @@ if [[ "root" != `whoami` ]] ; then
     exit
 fi
 
+# 设置调试模式
+# set -x
+
 # 脚本参数解析
 if [[ $# < 3 ]] ; then
     echo "Usage: $0 1.tomcat version 2.tomcat home 3.tomcat port"
@@ -36,7 +39,7 @@ sed -i "s/8080/$3/" $2/conf/server.xml
 # 启动 tomcat 服务
 sh $2/bin/startup.sh
 
-# sleep 3
+sleep 3
 
 echo "-----------------------检测 tomcat 是否启动----------------------"
 

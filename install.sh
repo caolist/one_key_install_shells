@@ -9,20 +9,25 @@ if [[ "root" != `whoami` ]] ; then
     exit
 fi
 
-# 设置调试模式
-# set -x
-
 [ -f /etc/init.d/functions ] && . /etc/init.d/functions
 
-function menu(){
+function read_config(){
+    
+    cat $1 | while read line || [ -n "$line" ]
+    do
+        echo ${line}
+    done
+}
+
+function main_menu(){
 cat << EOF
 ----------------------------------------------
 |*******Please Enter Your Choice:[1-4]*******|
 ----------------------------------------------
-*   `echo -e "\033[35m 1)lamp install\033[0m"`
-*   `echo -e "\033[35m 2)lnmp install\033[0m"`
-*   `echo -e "\033[35m 3)quit\033[0m"`
-*   `echo -e "\033[35m 4)return main menu\033[0m"`
+*   `echo -e "\033[35m 1)安装集群环境\033[0m"`
+*   `echo -e "\033[35m 2)安装应用相关\033[0m"`
+*   `echo -e "\033[35m 3)退出\033[0m"`
+*   `echo -e "\033[35m 4)返回主菜单\033[0m"`
 EOF
 }
 
@@ -63,7 +68,7 @@ EOF
         ;;
         4)
             clear
-            menu
+            main_menu
         ;;
         *)
             clear
@@ -78,10 +83,10 @@ cat << EOF
 ----------------------------------------------
 |*******Please Enter Your Choice:[1-4]*******|
 ----------------------------------------------
-*   `echo -e "\033[35m 1)nginx install\033[0m"`
-*   `echo -e "\033[35m 2)mysql install\033[0m"`
-*   `echo -e "\033[35m 3)php install\033[0m"`
-*   `echo -e "\033[35m 4)return main menu\033[0m"`
+*   `echo -e "\033[35m 1)安装 mysql\033[0m"`
+*   `echo -e "\033[35m 2)安装 tomcat\033[0m"`
+*   `echo -e "\033[35m 3)安装 ilog\033[0m"`
+*   `echo -e "\033[35m 4)返回主菜单\033[0m"`
 EOF
     read -p "please input second_lnmp options[1-4]: " num3
     expr $num2 + 1 &>/dev/null  #这里加1，判断输入的是不是整数。
@@ -92,25 +97,29 @@ EOF
     fi
     case $num3 in
         1)
-            action "Installed Nginx..." /bin/true
+            action "Installed mysql..." /bin/true
             sleep 2
             lnmp_menu
         ;;
         2)
-            action "Installed MySQL..." /bin/true
-            sleep 2
+            # action "Installed tomcat..." /bin/true
+            # sleep 2
+            CONFIG_VALUE=`read_config 'tomcat_config'`
+            echo $CONFIG_VALUE
+            cd tomcat
+            sh tomcat_install.sh $CONFIG_VALUE
             clear
             lnmp_menu
         ;;
         3)
-            action "Installed PHP..." /bin/true
+            action "Installed ilog..." /bin/true
             sleep 2
             clear
             lnmp_menu
         ;;
         4)
             clear
-            menu
+            main_menu
         ;;
         *)
             clear
@@ -121,7 +130,7 @@ EOF
 }
 
 clear
-menu
+main_menu
 
 while true ;do
     read -p "##please Enter Your first_menu Choice:[1-4]" num1
@@ -148,11 +157,11 @@ while true ;do
         ;;
         4)
             clear
-            menu
+            main_menu
         ;;
         *)
             clear
             echo -e "\033[31mYour Enter a number Error,Please Enter again Choice:[1-4]: \033[0m"
-            menu
+            main_menu
     esac
 done
