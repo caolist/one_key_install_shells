@@ -109,14 +109,12 @@ mysql -u root -proot --connect-expired-password -e "SET PASSWORD = PASSWORD('roo
 mysql -u root -proot -e "use mysql;update user set host = '%' where user ='root';"
 
 echo "-----------------------导入基础数据----------------------"
-pwd
-sleep 5
+cd $mysql_ins_home
 mysql -u root -proot -e "source ilog.sql"
 mysql -u root -proot -e "source phone_employee_info.sql"
 
 # 删除 mysql 相关安装包
 echo "-----------------------删除 mysql 安装包----------------------"
-cd $mysql_ins_home
 rm -rf mysql-community-*.rpm
 
 echo "-----------------------完成安装 mysql----------------------"
