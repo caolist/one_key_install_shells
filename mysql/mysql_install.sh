@@ -10,7 +10,7 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 设置调试模式
-#set -x
+set -x
 
 echo "-----------------------开始安装 mysql----------------------"
 
@@ -104,7 +104,15 @@ cat /etc/my.cnf
 sed -i '/skip-grant-tables/s/^/#/' /etc/my.cnf
 
 mysql -u root -proot --connect-expired-password -e "SET PASSWORD = PASSWORD('root');"
+
+# 允许远程连接
 mysql -u root -proot -e "use mysql;update user set host = '%' where user ='root';"
+
+echo "-----------------------导入基础数据----------------------"
+pwd
+sleep 5
+mysql -u root -proot -e "source ilog.sql"
+mysql -u root -proot -e "source phone_employee_info.sql"
 
 # 删除 mysql 相关安装包
 echo "-----------------------删除 mysql 安装包----------------------"

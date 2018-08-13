@@ -55,29 +55,41 @@ EOF
         1)
             # action "安装 zookeeper..." /bin/true
             # sleep 2
+            cd zookeeper
             CONFIG_VALUE=`read_config 'zk_parms'`
-            sh zookeeper/zk_install.sh $CONFIG_VALUE
+            sh zk_install.sh $CONFIG_VALUE
+            cd ..
+            clear
             lamp_menu
         ;;
         2)
             # action "安装 kafka..." /bin/true
             # sleep 2
+            cd kafka
             CONFIG_VALUE=`read_config 'kafka_parms'`
-            sh kafka/kafka_install.sh $CONFIG_VALUE
+            sh kafka_install.sh $CONFIG_VALUE
+            cd ..
+            clear
             lamp_menu
         ;;
         3)
             # action "安装 logstash..." /bin/true
             # sleep 2
+            cd logstash
             CONFIG_VALUE=`read_config 'logstash_parms'`
-            sh logstash/logstash_install.sh $CONFIG_VALUE
+            sh logstash_install.sh $CONFIG_VALUE
+            cd ..
+            clear
             lamp_menu
         ;;
         4)
             # action "安装 elasticSearch..." /bin/true
             # sleep 2
+            cd elasticSearch
             CONFIG_VALUE=`read_config 'es_parms'`
-            sh elasticSearch/elastic_install.sh $CONFIG_VALUE
+            sh elastic_install.sh $CONFIG_VALUE
+            cd ..
+            clear
             lamp_menu
         ;;
         5)
@@ -114,20 +126,28 @@ EOF
         1)
             # action "安装 mysql..." /bin/true
             # sleep 2
-            sh mysql/mysql_install.sh
+            cd mysql
+            sh mysql_install.sh
+            cd ..
+            clear
             lnmp_menu
         ;;
         2)
             # action "安装 tomcat..." /bin/true
             # sleep 2
+            cd tomcat
             CONFIG_VALUE=`read_config 'tomcat_parms'`
-            sh tomcat/tomcat_install.sh $CONFIG_VALUE
+            sh tomcat_install.sh $CONFIG_VALUE
+            cd ..
             clear
             lnmp_menu
         ;;
         3)
             # action "安装 ilog..." /bin/true
             # sleep 2
+            cd ilog_app
+            sh ilog_app/ilog_install.sh
+            cd ..
             clear
             lnmp_menu
         ;;
