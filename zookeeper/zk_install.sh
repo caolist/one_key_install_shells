@@ -47,7 +47,7 @@ echo $zk_hosts
 echo "-----------------------开始安装 zookeeper----------------------"
 
 # 解压安装 zookeeper
-tar -zxvf zookeeper-${zk_version}.tar.gz
+tar -zxf zookeeper-${zk_version}.tar.gz
 
 cat $1 | while read line || [ -n "$line" ]
 do
@@ -65,7 +65,7 @@ do
     ssh -t root@${host_name} << EOF
 mkdir -p $zk_home
 EOF
-    scp -r zookeeper-${zk_version}/* $host_name:$zk_home
+    scp -r -q zookeeper-${zk_version}/* $host_name:$zk_home
     
     # 拷贝环境配置脚本以及启动脚本
     scp zk_install_config.sh $host_name:/opt/zk_install_config.sh

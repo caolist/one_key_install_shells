@@ -9,6 +9,8 @@ if [[ "root" != `whoami` ]] ; then
     exit
 fi
 
+ins_home=$PWD
+
 [ -f /etc/init.d/functions ] && . /etc/init.d/functions
 
 function read_config(){
@@ -22,12 +24,11 @@ function read_config(){
 function main_menu(){
 cat << EOF
 ----------------------------------------------
-|************请输入你的选择：[1-4]************|
+|************请输入你的选择：[1-3]************|
 ----------------------------------------------
 *   `echo -e "\033[35m 1)安装集群环境\033[0m"`
 *   `echo -e "\033[35m 2)安装应用相关\033[0m"`
 *   `echo -e "\033[35m 3)退出\033[0m"`
-*   `echo -e "\033[35m 4)返回主菜单\033[0m"`
 EOF
 }
 
@@ -39,7 +40,7 @@ cat << EOF
 *   `echo -e "\033[35m 1)安装 zookeeper\033[0m"`
 *   `echo -e "\033[35m 2)安装 kafka\033[0m"`
 *   `echo -e "\033[35m 3)安装 logstash\033[0m"`
-*   `echo -e "\033[35m 4)安装 elasticSearch\033[0m"`
+*   `echo -e "\033[35m 4)安装 elasticsearch\033[0m"`
 *   `echo -e "\033[35m 5)返回主菜单\033[0m"`
 EOF
     read -p "####请输入安装集群环境菜单功能数字[1-5]：" num2
@@ -55,40 +56,40 @@ EOF
         1)
             # action "安装 zookeeper..." /bin/true
             # sleep 2
-            cd zookeeper
             CONFIG_VALUE=`read_config 'install_parms/zk_parms'`
+            cd zookeeper
             sh zk_install.sh $CONFIG_VALUE
-            cd ..
+            cd $ins_home
             clear
             lamp_menu
         ;;
         2)
             # action "安装 kafka..." /bin/true
             # sleep 2
-            cd kafka
             CONFIG_VALUE=`read_config 'install_parms/kafka_parms'`
+            cd kafka
             sh kafka_install.sh $CONFIG_VALUE
-            cd ..
+            cd $ins_home
             clear
             lamp_menu
         ;;
         3)
             # action "安装 logstash..." /bin/true
             # sleep 2
-            cd logstash
             CONFIG_VALUE=`read_config 'install_parms/logstash_parms'`
+            cd logstash
             sh logstash_install.sh $CONFIG_VALUE
-            cd ..
+            cd $ins_home
             clear
             lamp_menu
         ;;
         4)
-            # action "安装 elasticSearch..." /bin/true
+            # action "安装 elasticsearch..." /bin/true
             # sleep 2
-            cd elasticSearch
             CONFIG_VALUE=`read_config 'install_parms/es_parms'`
+            cd elasticsearch
             sh elastic_install.sh $CONFIG_VALUE
-            cd ..
+            cd $ins_home
             clear
             lamp_menu
         ;;
@@ -128,26 +129,26 @@ EOF
             # sleep 2
             cd mysql
             sh mysql_install.sh
-            cd ..
+            cd $ins_home
             clear
             lnmp_menu
         ;;
         2)
             # action "安装 tomcat..." /bin/true
             # sleep 2
-            cd tomcat
             CONFIG_VALUE=`read_config 'install_parms/tomcat_parms'`
+            cd tomcat
             sh tomcat_install.sh $CONFIG_VALUE
-            cd ..
+            cd $ins_home
             clear
             lnmp_menu
         ;;
         3)
             # action "安装 ilog..." /bin/true
             # sleep 2
-            cd ilog_app
-            sh ilog_app/ilog_install.sh
-            cd ..
+            cd ilog
+            sh ilog/ilog_install.sh
+            cd $ins_home
             clear
             lnmp_menu
         ;;
@@ -166,7 +167,7 @@ clear
 main_menu
 
 while true ;do
-    read -p "##请输入主菜单上的数字[1-4]：" num1
+    read -p "##请输入主菜单上的数字[1-3]：" num1
     # expr $num1 + 1 &>/dev/null   #这里加1，判断输入的是不是整数。
     # if [ $? -ne 0 ];then   #如果不等于零，代表输入不是整数。
     #     echo "###########################"
@@ -194,7 +195,7 @@ while true ;do
         ;;
         *)
             clear
-            echo -e "\033[31m输入错误，请重新输入数字[1-4]：\033[0m"
+            echo -e "\033[31m输入错误，请重新输入数字[1-3]：\033[0m"
             main_menu
     esac
 done

@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/07/30
 # -----------------------------------------------------------------------------
-# shell script for install ElasticSearch (version 6.2.3)
+# shell script for install elasticsearch (version 6.2.3)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then
@@ -41,9 +41,9 @@ done < $3
 
 echo $zen_hosts
 
-echo "-----------------------开始安装 elasticSearch----------------------"
+echo "-----------------------开始安装 elasticsearch----------------------"
 
-# 解压安装 elasticSearch
+# 解压安装 elasticsearch
 tar -xzf elasticsearch-${es_version}.tar.gz
 
 # 根据配置文件进行操作
@@ -96,4 +96,4 @@ done
 # 删除 es 安装文件
 rm -rf elasticsearch-${es_version}
 
-echo "-----------------------完成安装 elasticSearch----------------------"
+echo "-----------------------完成安装 elasticsearch----------------------"
