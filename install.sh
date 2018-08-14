@@ -56,7 +56,7 @@ EOF
             # action "安装 zookeeper..." /bin/true
             # sleep 2
             cd zookeeper
-            CONFIG_VALUE=`read_config 'zk_parms'`
+            CONFIG_VALUE=`read_config 'install_parms/zk_parms'`
             sh zk_install.sh $CONFIG_VALUE
             cd ..
             clear
@@ -66,7 +66,7 @@ EOF
             # action "安装 kafka..." /bin/true
             # sleep 2
             cd kafka
-            CONFIG_VALUE=`read_config 'kafka_parms'`
+            CONFIG_VALUE=`read_config 'install_parms/kafka_parms'`
             sh kafka_install.sh $CONFIG_VALUE
             cd ..
             clear
@@ -76,7 +76,7 @@ EOF
             # action "安装 logstash..." /bin/true
             # sleep 2
             cd logstash
-            CONFIG_VALUE=`read_config 'logstash_parms'`
+            CONFIG_VALUE=`read_config 'install_parms/logstash_parms'`
             sh logstash_install.sh $CONFIG_VALUE
             cd ..
             clear
@@ -86,7 +86,7 @@ EOF
             # action "安装 elasticSearch..." /bin/true
             # sleep 2
             cd elasticSearch
-            CONFIG_VALUE=`read_config 'es_parms'`
+            CONFIG_VALUE=`read_config 'install_parms/es_parms'`
             sh elastic_install.sh $CONFIG_VALUE
             cd ..
             clear
@@ -136,7 +136,7 @@ EOF
             # action "安装 tomcat..." /bin/true
             # sleep 2
             cd tomcat
-            CONFIG_VALUE=`read_config 'tomcat_parms'`
+            CONFIG_VALUE=`read_config 'install_parms/tomcat_parms'`
             sh tomcat_install.sh $CONFIG_VALUE
             cd ..
             clear
