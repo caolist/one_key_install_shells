@@ -21,7 +21,7 @@ if [[ $# < 2 ]] ; then
     echo "example:"
     echo "node01 /opt/logstash a.yml,b.yml"
     echo "node02 /opt/logstash c.yml,d.yml"
-    echo "node05 /opt/logstash e.yml,f.yml"
+    echo "node03 /opt/logstash e.yml,f.yml"
     exit
 fi
 
@@ -32,7 +32,7 @@ echo $logstash_version
 echo "-----------------------开始安装 logstash----------------------"
 
 # 解压安装 logstash
-tar -zxvf logstash-${logstash_version}.tar.gz
+tar -zxf logstash-${logstash_version}.tar.gz
 
 cat $1 | while read line || [ -n "$line" ]
 do
@@ -46,7 +46,7 @@ do
     ssh -t root@${host_name} << EOF
 mkdir -p $logstash_home
 EOF
-    scp -r logstash-${logstash_version}/* $host_name:$logstash_home
+    scp -r -q logstash-${logstash_version}/* $host_name:$logstash_home
     
     # 拷贝 logstash 配置文件到各个节点的 logstash/conf 目录
     for config_file in `echo ${logstash_config_files} | awk -F "," '{for(i=1;i<=NF;i++){print $i}}'`

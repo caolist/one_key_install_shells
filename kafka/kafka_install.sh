@@ -10,7 +10,7 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 设置调试模式
-set -x
+# set -x
 
 # 脚本参数解析
 if [[ $# < 2 ]] ; then
@@ -21,7 +21,7 @@ if [[ $# < 2 ]] ; then
     echo "example:"
     echo "node01 /opt/kafka 2181 1"
     echo "node02 /opt/kafka 2181 2"
-    echo "node05 /opt/kafka 2181 3"
+    echo "node03 /opt/kafka 2181 3"
     exit
 fi
 
@@ -46,7 +46,7 @@ echo $kafka_hosts
 echo "-----------------------开始安装 kafka----------------------"
 
 # 解压安装 kafka
-tar -zxvf kafka_${kafka_version}.tgz
+tar -zxf kafka_${kafka_version}.tgz
 
 cat $1 | while read line || [ -n "$line" ]
 do
@@ -61,10 +61,10 @@ do
 mkdir -p $kafka_home
 EOF
     
-    scp -r kafka_${kafka_version}/* $host_name:$kafka_home
+    scp -r -q kafka_${kafka_version}/* $host_name:$kafka_home
     
     # 拷贝环境配置脚本以及启动脚本
-    scp kafka_install_config.sh $host_name:/opt/kafka_install_config.sh
+    scp -q kafka_install_config.sh $host_name:/opt/kafka_install_config.sh
     
     echo "-----------------------配置 kafka----------------------"
     ssh -t root@${host_name} << EOF

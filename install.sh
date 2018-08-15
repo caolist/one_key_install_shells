@@ -26,9 +26,9 @@ cat << EOF
 ----------------------------------------------
 |************请输入你的选择：[1-3]************|
 ----------------------------------------------
-*   `echo -e "\033[35m 1)安装集群环境\033[0m"`
-*   `echo -e "\033[35m 2)安装应用相关\033[0m"`
-*   `echo -e "\033[35m 3)退出\033[0m"`
+*   `echo -e "\033[36m 1)安装集群环境\033[0m"`
+*   `echo -e "\033[36m 2)安装应用相关\033[0m"`
+*   `echo -e "\033[36m 3)退出\033[0m"`
 EOF
 }
 
@@ -37,11 +37,11 @@ cat << EOF
 ----------------------------------------------
 |************请输入你的选择：[1-5]************|
 ----------------------------------------------
-*   `echo -e "\033[35m 1)安装 zookeeper\033[0m"`
-*   `echo -e "\033[35m 2)安装 kafka\033[0m"`
-*   `echo -e "\033[35m 3)安装 logstash\033[0m"`
-*   `echo -e "\033[35m 4)安装 elasticsearch\033[0m"`
-*   `echo -e "\033[35m 5)返回主菜单\033[0m"`
+*   `echo -e "\033[36m 1)安装 zookeeper\033[0m"`
+*   `echo -e "\033[36m 2)安装 kafka\033[0m"`
+*   `echo -e "\033[36m 3)安装 elasticsearch\033[0m"`
+*   `echo -e "\033[36m 4)安装 logstash\033[0m"`
+*   `echo -e "\033[36m 5)返回主菜单\033[0m"`
 EOF
     read -p "####请输入安装集群环境菜单功能数字[1-5]：" num2
     # expr $num2 + 1 &>/dev/null  #这里加1，判断输入的是不是整数。
@@ -74,21 +74,21 @@ EOF
             lamp_menu
         ;;
         3)
-            # action "安装 logstash..." /bin/true
-            # sleep 2
-            CONFIG_VALUE=`read_config 'install_parms/logstash_parms'`
-            cd logstash
-            sh logstash_install.sh $CONFIG_VALUE
-            cd $ins_home
-            clear
-            lamp_menu
-        ;;
-        4)
             # action "安装 elasticsearch..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/es_parms'`
             cd elasticsearch
             sh elastic_install.sh $CONFIG_VALUE
+            cd $ins_home
+            clear
+            lamp_menu
+        ;;
+        4)
+            # action "安装 logstash..." /bin/true
+            # sleep 2
+            CONFIG_VALUE=`read_config 'install_parms/logstash_parms'`
+            cd logstash
+            sh logstash_install.sh $CONFIG_VALUE
             cd $ins_home
             clear
             lamp_menu
@@ -109,10 +109,10 @@ cat << EOF
 ----------------------------------------------
 |************请输入你的选择：[1-4]************|
 ----------------------------------------------
-*   `echo -e "\033[35m 1)安装 mysql\033[0m"`
-*   `echo -e "\033[35m 2)安装 tomcat\033[0m"`
-*   `echo -e "\033[35m 3)安装 ilog\033[0m"`
-*   `echo -e "\033[35m 4)返回主菜单\033[0m"`
+*   `echo -e "\033[36m 1)安装 mysql\033[0m"`
+*   `echo -e "\033[36m 2)安装 tomcat\033[0m"`
+*   `echo -e "\033[36m 3)安装 ilog\033[0m"`
+*   `echo -e "\033[36m 4)返回主菜单\033[0m"`
 EOF
     read -p "请输入安装应用相关菜单功能数字[1-4]：" num3
     # expr $num3 + 1 &>/dev/null  #这里加1，判断输入的是不是整数。
@@ -167,7 +167,7 @@ clear
 main_menu
 
 while true ;do
-    read -p "##请输入主菜单上的数字[1-3]：" num1
+    read -p "请输入主菜单上的数字[1-3]：" num1
     # expr $num1 + 1 &>/dev/null   #这里加1，判断输入的是不是整数。
     # if [ $? -ne 0 ];then   #如果不等于零，代表输入不是整数。
     #     echo "###########################"

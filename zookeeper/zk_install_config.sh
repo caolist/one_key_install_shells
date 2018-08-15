@@ -36,14 +36,9 @@ mkdir -p $3
 touch $2/myid
 echo $5 > $2/myid
 
+# 设置系统环境变量
 # echo 'ZOOKEEPER_HOME='$1'' >> /etc/profile
 # echo 'PATH=$PATH:$ZOOKEEPER_HOME/bin' >> /etc/profile
 # echo 'export ZOOKEEPER_HOME' >> /etc/profile
 # echo 'export PATH' >> /etc/profile
 # source /etc/profile
-
-echo "-----------------------启动 zookeeper 服务----------------------"
-sh $1/bin/zkServer.sh start
-
-echo "-----------------------查看 zookeeper 服务状态----------------------"
-sh $1/bin/zkServer.sh status

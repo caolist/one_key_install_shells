@@ -27,7 +27,7 @@ echo $tomcat_version
 echo "-----------------------开始安装 tomcat----------------------"
 
 # 解压安装 tomcat
-tar -zxvf apache-tomcat-${tomcat_version}.tar.gz
+tar -zxf apache-tomcat-${tomcat_version}.tar.gz
 if [[ ! -e $2 ]] ; then
     mkdir -p $2
 fi

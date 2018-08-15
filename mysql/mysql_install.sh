@@ -51,7 +51,7 @@ if test $? != 0 ;then
     rpm -ivh net-tools-2.0-0.22.20131004git.el7.x86_64.rpm
 fi
 
-tar -xvf mysql-5.7.9-1.el7.x86_64.rpm-bundle.tar
+tar -xf mysql-5.7.9-1.el7.x86_64.rpm-bundle.tar
 rpm -ivh mysql-community-common-5.7.9-1.el7.x86_64.rpm
 rpm -ivh mysql-community-libs-5.7.9-1.el7.x86_64.rpm
 rpm -ivh mysql-community-libs-compat-5.7.9-1.el7.x86_64.rpm

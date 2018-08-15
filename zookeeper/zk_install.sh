@@ -21,7 +21,7 @@ if [[ $# < 2 ]] ; then
     echo "example:"
     echo "node01 2888 3888 /opt/zookeeper /var/lib/zookeeper /var/lib/zookeeper 1"
     echo "node02 2888 3888 /opt/zookeeper /var/lib/zookeeper /var/lib/zookeeper 2"
-    echo "node05 2888 3888 /opt/zookeeper /var/lib/zookeeper /var/lib/zookeeper 3"
+    echo "node03 2888 3888 /opt/zookeeper /var/lib/zookeeper /var/lib/zookeeper 3"
     exit
 fi
 
@@ -68,7 +68,7 @@ EOF
     scp -r -q zookeeper-${zk_version}/* $host_name:$zk_home
     
     # 拷贝环境配置脚本以及启动脚本
-    scp zk_install_config.sh $host_name:/opt/zk_install_config.sh
+    scp -q zk_install_config.sh $host_name:/opt/zk_install_config.sh
     
     # 拷贝 zookeeper 中 conf 目录下的 zoo_sample.cfg 为 zoo.cfg
     # 删除原 dataDir
@@ -79,6 +79,28 @@ EOF
     ssh -t root@${host_name} << EOF
 sh /opt/zk_install_config.sh $zk_home $data_path $log_path $zk_hosts $zk_myid
 rm -rf /opt/zk_install_config.sh
+EOF
+done
+
+echo "-----------------------启动 zookeeper 服务----------------------"
+cat $1 | while read line || [ -n "$line" ]
+do
+    host_name=`echo ${line} | awk '{print $1}'`
+    zk_home=`echo ${line} | awk '{print $4}'`
+    echo '${host_name} 节点 zookeeper 启动...'
+    ssh -t root@${host_name} << EOF
+sh ${zk_home}/bin/zkServer.sh start
+EOF
+done
+
+echo "-----------------------查看 zookeeper 服务状态----------------------"
+cat $1 | while read line || [ -n "$line" ]
+do
+    host_name=`echo ${line} | awk '{print $1}'`
+    zk_home=`echo ${line} | awk '{print $4}'`
+    echo '${host_name} 节点 zookeeper 服务状态检查...'
+    ssh -t root@${host_name} << EOF
+sh ${zk_home}/bin/zkServer.sh status
 EOF
 done
 

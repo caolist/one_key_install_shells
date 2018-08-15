@@ -21,6 +21,7 @@ if [[ $# < 4 ]] ; then
     echo "example:"
     echo "node01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 4g"
     echo "node02 esnode02 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 512m"
+    echo "node02 esnode03 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 512m"
     exit
 fi
 
@@ -68,12 +69,12 @@ do
     ssh -t root@${host_name} << EOF
 mkdir -p $es_home
 EOF
-    scp -r elasticsearch-${es_version}/* $host_name:$es_home
+    scp -r -q elasticsearch-${es_version}/* $host_name:$es_home
     
     # 拷贝环境配置脚本以及启动脚本
-    scp elastic_install_env.sh $host_name:/opt/elastic_install_env.sh
-    scp elastic_install_config.sh $host_name:/opt/elastic_install_config.sh
-    scp elastic_install_jvm.sh $host_name:/opt/elastic_install_jvm.sh
+    scp -q elastic_install_env.sh $host_name:/opt/elastic_install_env.sh
+    scp -q elastic_install_config.sh $host_name:/opt/elastic_install_config.sh
+    scp -q elastic_install_jvm.sh $host_name:/opt/elastic_install_jvm.sh
     
     # 添加 es 用户，建立数据日志目录并赋予权限,接着启动 es 服务
     ssh -t root@${host_name} << EOF

@@ -22,3 +22,14 @@ sed -i -e '$a\auto.create.topics.enable=false' $2/config/server.properties
 echo "-----------------------启动 kafka 服务----------------------"
 cd $2/bin
 ./kafka-server-start.sh -daemon ../config/server.properties
+
+sleep 3
+
+echo "-----------------------查看 kafka 服务状态----------------------"
+is_kafka_running=`jps | grep Kafka | wc -l`
+if [[ $is_kafka_running = "1" ]] ; then
+    echo 'kafka 启动成功'
+else
+    echo 'kafka 启动失败'
+    exit
+fi
