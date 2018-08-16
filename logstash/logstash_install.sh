@@ -10,18 +10,18 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 设置调试模式
-set -x
+# set -x
 
 # 脚本参数解析
 if [[ $# < 2 ]] ; then
     echo "Usage: $0 1.logstash node config file path(file content format as follows:) 2.logstash version"
     echo "example:"
     echo "./logstash_install.sh logstash_config 6.3.2"
-    echo "1.host_name 2.logstash_home 3.logstash_config_files"
+    echo "1.host_name 2.logstash_home 3.logstash_config_files 4.log_file_path"
     echo "example:"
-    echo "node01 /opt/logstash a.yml,b.yml"
-    echo "node02 /opt/logstash c.yml,d.yml"
-    echo "node03 /opt/logstash e.yml,f.yml"
+    echo "node01 /opt/logstash a.yml,b.yml /home/ilog/logdata"
+    echo "node02 /opt/logstash c.yml,d.yml /home/ilog/logdata"
+    echo "node03 /opt/logstash e.yml,f.yml /home/ilog/logdata"
     exit
 fi
 
@@ -41,6 +41,7 @@ do
     host_name=`echo ${line} | awk '{print $1}'`
     logstash_home=`echo ${line} | awk '{print $2}'`
     logstash_config_files=`echo ${line} | awk '{print $3}'`
+    log_file_path=`echo ${line} | awk '{print $4}'`
     
     echo "$host_name 节点安装 logstash..."
     ssh -t root@${host_name} << EOF
@@ -48,11 +49,19 @@ mkdir -p $logstash_home
 EOF
     scp -r -q logstash-${logstash_version}/* $host_name:$logstash_home
     
+    # 拷贝环境配置脚本以及启动脚本
+    scp -q logstash_install_config.sh $host_name:/opt/logstash_install_config.sh
+    
+    echo "-----------------------配置 logstash----------------------"
+    ssh -t root@${host_name} << EOF
+sh /opt/logstash_install_config.sh $host_name $log_file_path
+EOF
+    
     # 拷贝 logstash 配置文件到各个节点的 logstash/conf 目录
     for config_file in `echo ${logstash_config_files} | awk -F "," '{for(i=1;i<=NF;i++){print $i}}'`
     do
         echo "拷贝 $config_file"
-        scp $config_file $host_name:${logstash_home}/config
+        scp -q ymls/${config_file} $host_name:${logstash_home}/config
     done
     
 done

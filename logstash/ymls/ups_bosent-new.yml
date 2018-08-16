@@ -1,0 +1,70 @@
+input {
+    file {
+        path => ["/home/ilog/logdata/UPSLOG/common-error.log","/home/ilog/logdata/UPSLOG/up_ups-default.log","/home/ilog/logdata/UPSLOG/up_ups-yaevent.log"]
+        add_field => { "@type" => "UPS" "@source_ip" => "10.1.98.16" "sysno" => "UPS"}
+        close_older => 600
+        ignore_older => 3600
+    }
+} 
+  
+filter {
+ ruby{
+  code =>"file_name = event['path'].split('/')[-1].split('.')[0]
+        event['log_type'] = file_name"
+ }
+if [log_type] == "common-error"{
+  multiline {
+            pattern => "\d{4}-\d{2}-\d{2} (\d\d:){2}\d{2}.\d{3}"
+            negate => true
+            what => "previous"
+        }	
+  grok {
+    match => { "message" => "%{LOG4J_UPS:UPS}" }
+    add_field => { "@message" => "%{[message]}"}
+  }
+  date {  
+    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss.SSS" ]  
+  }
+ } 
+ if [log_type] == "up_ups-default"{
+  multiline {
+            pattern => "\d{4}-\d{2}-\d{2} (\d\d:){2}\d{2}.\d{3}"
+            negate => true
+            what => "previous"
+        }
+  grok {
+    match => { "message" => "%{LOG4J_UPS:UPS}" }
+    add_field => { "@message" => "%{[message]}"}
+  }
+  date {
+    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss.SSS" ]
+  } 
+ }
+ if [log_type] == "up_ups-yaevent"{
+  grok {
+    match => { "message" => "%{TIMESTAMP_ISO8601:timestamp}%{SPACE}\[%{PROG:thread}\]%{SPACE}\[%{LOGLEVEL:level}\]%{SPACE}(.*?\.?.*?)\:([0-9]*)%{SPACE}%{GREEDYDATA:json}" }
+    add_field => { "@message" => "%{[message]}"}
+  }
+  json {
+        source => "json"
+        remove_field => ["json", "message", "file", "lineNumber" ]
+    }
+  date {
+    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss.SSS" ]
+    remove_field => ["timestamp"]
+  } 
+ }
+}  
+
+output{
+  kafka{
+    bootstrap_servers => "slave2:9092"
+    topic_id => "pro_kafka"
+    batch_size => 1000
+  }
+ stdout {
+        codec => rubydebug
+  }
+}
+
+

@@ -10,7 +10,9 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 创建消息持久化目录
-mkdir -p $2/kafkaLogs
+if [[ ! -e $2/kafkaLogs ]] ; then
+    mkdir -p $2/kafkaLogs
+fi
 
 # 修改各配置项
 sed -i -e "/^broker.id=0/Ic\broker.id=$4" \

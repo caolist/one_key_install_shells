@@ -1,3 +1,3 @@
-node01 /opt/logstash a.yml,b.yml
-node02 /opt/logstash c.yml,d.yml
-node03 /opt/logstash e.yml,f.yml
+node01 /opt/logstash ups_bosent-new.yml /home/ilog/logdata
+node02 /opt/logstash ups_bosent-new.yml /home/ilog/logdata
+node03 /opt/logstash ups_bosent-new.yml /home/ilog/logdata
