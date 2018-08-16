@@ -44,7 +44,7 @@ do
     log_file_path=`echo ${line} | awk '{print $4}'`
     
     echo "$host_name 节点安装 logstash..."
-    ssh -t root@${host_name} << EOF
+    ssh -Tq root@${host_name} << EOF
 mkdir -p $logstash_home
 EOF
     scp -r -q logstash-${logstash_version}/* $host_name:$logstash_home
@@ -53,7 +53,7 @@ EOF
     scp -q logstash_install_config.sh $host_name:/opt/logstash_install_config.sh
     
     echo "-----------------------配置 logstash----------------------"
-    ssh -t root@${host_name} << EOF
+    ssh -Tq root@${host_name} << EOF
 sh /opt/logstash_install_config.sh $host_name $log_file_path
 EOF
     
