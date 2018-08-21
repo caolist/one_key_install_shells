@@ -58,8 +58,8 @@ if [log_type] == "common-error"{
 
 output{
   kafka{
-    bootstrap_servers => "slave2:9092"
-    topic_id => "pro_kafka"
+    bootstrap_servers => "node01:9092"
+    topic_id => "xxx"
     batch_size => 1000
   }
  stdout {

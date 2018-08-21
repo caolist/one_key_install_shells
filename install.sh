@@ -98,8 +98,8 @@ EOF
             # action "安装 kafka-logs..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/kafka-logs_parms'`
-            cd logstash-logs
-            sh logstash-logs_install.sh $CONFIG_VALUE
+            cd kafka-logs
+            sh kafka-logs_install.sh $CONFIG_VALUE
             cd $ins_home
             clear
             lamp_menu

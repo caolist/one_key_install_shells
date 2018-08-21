@@ -1,0 +1,1 @@
+ilog node01,node02,node05 9200 logstash

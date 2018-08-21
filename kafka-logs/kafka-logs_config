@@ -1,1 +1,1 @@
-node01
+node01 /opt/kafka 2181 /opt/kafka-logs topic_ilog 1 1 9092 node01:2181,node02:2181,node03:2181 logs

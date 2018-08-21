@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/08/08
 # -----------------------------------------------------------------------------
-# shell script for install logstash (version 6.3.2)
+# shell script for install logstash (version 2.4.1)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then
@@ -16,7 +16,7 @@ fi
 if [[ $# < 2 ]] ; then
     echo "Usage: $0 1.logstash node config file path(file content format as follows:) 2.logstash version"
     echo "example:"
-    echo "./logstash_install.sh logstash_config 6.3.2"
+    echo "./logstash_install.sh logstash_config 2.4.1"
     echo "1.host_name 2.logstash_home 3.logstash_config_files 4.log_file_path"
     echo "example:"
     echo "node01 /opt/logstash a.yml,b.yml /home/ilog/logdata"
@@ -61,7 +61,7 @@ EOF
     for config_file in `echo ${logstash_config_files} | awk -F "," '{for(i=1;i<=NF;i++){print $i}}'`
     do
         echo "拷贝 $config_file"
-        scp -q ymls/${config_file} $host_name:${logstash_home}/config
+        scp -q ymls/${config_file} $host_name:${logstash_home}/conf
     done
     
 done
@@ -78,15 +78,13 @@ do
     echo "$host_name 节点启动 logstash..."
     
     # 启动各个实例
-    #     for config_file in `echo ${logstash_config_files} | awk -F "," '{for(i=1;i<=NF;i++){print $i}}'`
-    #     do
-    #         echo "$host_name 节点启动 logstash ${config_file} 实例..."
-    #         ssh -t root@${host_name} << EOF
-    #     ${logstash_home}/bin/logstash -f config_file
-    # EOF
-    
-    #     done
-    
+    for config_file in `echo ${logstash_config_files} | awk -F "," '{for(i=1;i<=NF;i++){print $i}}'`
+    do
+        echo "$host_name 节点启动 logstash ${config_file} 实例..."
+        ssh -t root@${host_name} << EOF
+nohup ${logstash_home}/bin/logstash -f ${logstash_home}/conf/config_file &
+EOF
+    done
 done
 
 # 删除 logstash 安装文件
