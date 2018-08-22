@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/07/27
 # -----------------------------------------------------------------------------
-# shell script for install MySQL (default version 5.7.9)
+# shell script for install MySQL (default version 5.7.23)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then
@@ -11,6 +11,18 @@ fi
 
 # 设置调试模式
 # set -x
+
+# 脚本参数解析
+if [[ $# < 1 ]] ; then
+    echo "Usage: $0 1.mysql version"
+    echo "example:"
+    echo "./mysql_install.sh 5.7.23-1.el7.x86_64"
+    exit
+fi
+
+# tomcat 版本号
+mysql_version=$1
+echo $mysql_version
 
 echo "-----------------------开始安装 mysql----------------------"
 
@@ -51,12 +63,12 @@ if test $? != 0 ;then
     rpm -ivh net-tools-2.0-0.22.20131004git.el7.x86_64.rpm
 fi
 
-tar -xf mysql-5.7.9-1.el7.x86_64.rpm-bundle.tar
-rpm -ivh mysql-community-common-5.7.9-1.el7.x86_64.rpm
-rpm -ivh mysql-community-libs-5.7.9-1.el7.x86_64.rpm
-rpm -ivh mysql-community-libs-compat-5.7.9-1.el7.x86_64.rpm
-rpm -ivh mysql-community-client-5.7.9-1.el7.x86_64.rpm
-rpm -ivh mysql-community-server-5.7.9-1.el7.x86_64.rpm
+tar -xf mysql-${mysql_version}.rpm-bundle.tar
+rpm -ivh mysql-community-common-${mysql_version}.rpm
+rpm -ivh mysql-community-libs-${mysql_version}.rpm
+rpm -ivh mysql-community-libs-compat-${mysql_version}.rpm
+rpm -ivh mysql-community-client-${mysql_version}.rpm
+rpm -ivh mysql-community-server-${mysql_version}.rpm
 
 # 检查是否成功安装 mysql
 rpm -qa | grep "mysql"

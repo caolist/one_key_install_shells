@@ -138,8 +138,9 @@ EOF
         1)
             # action "安装 mysql..." /bin/true
             # sleep 2
+            CONFIG_VALUE=`read_config 'install_parms/mysql_parms'`
             cd mysql
-            sh mysql_install.sh
+            sh mysql_install.sh $CONFIG_VALUE
             cd $ins_home
             clear
             lnmp_menu
