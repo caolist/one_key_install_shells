@@ -10,7 +10,7 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 设置调试模式
-set -x
+# set -x
 
 # 读取 kafka
 while read line || [ -n "$line" ]

@@ -1,0 +1,1 @@
+solr_config 7.4.0 /opt/solr node01:2181,node02:2182,node03:2183

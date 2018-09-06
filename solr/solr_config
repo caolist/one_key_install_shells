@@ -1,0 +1,3 @@
+node01 /opt/solrhome /opt/tomcat_solr 9966
+node02 /opt/solrhome /opt/tomcat_solr 9966
+node03 /opt/solrhome /opt/tomcat_solr 9966
