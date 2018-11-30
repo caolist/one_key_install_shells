@@ -1,0 +1,3 @@
+node01 /opt/flink true 8081
+node02 /opt/flink false 8081
+node05 /opt/flink false 8081
