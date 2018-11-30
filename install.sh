@@ -41,15 +41,16 @@ cat << EOF
 *   `echo -e "\033[36m 2)安装 kafka\033[0m"`
 *   `echo -e "\033[36m 3)安装 elasticsearch\033[0m"`
 *   `echo -e "\033[36m 4)安装 logstash\033[0m"`
-*   `echo -e "\033[36m 5)安装 kafka-logs\033[0m"`
-*   `echo -e "\033[36m 6)返回主菜单\033[0m"`
+*   `echo -e "\033[36m 5)安装 flink\033[0m"`
+*   `echo -e "\033[36m 6)安装 kafka-logs\033[0m"`
+*   `echo -e "\033[36m 7)返回主菜单\033[0m"`
 EOF
     read -p "####请输入安装集群环境菜单功能数字[1-6]：" num2
     # expr $num2 + 1 &>/dev/null  #这里加1，判断输入的是不是整数。
     # if [ $? -ne 0 ];then    #如果不等于零，代表输入不是整数。
     #     echo "###########################"
     #     echo "注意！！非法字符输入。"
-    #     echo "请输入数字[1-5]:"
+    #     echo "请输入数字[1-6]:"
     #     echo "##########################"
     #     sleep 1
     # fi
@@ -95,6 +96,16 @@ EOF
             lamp_menu
         ;;
         5)
+            # action "安装 flink..." /bin/true
+            # sleep 2
+            CONFIG_VALUE=`read_config 'install_parms/flink_parms'`
+            cd flink
+            sh flink_install.sh $CONFIG_VALUE
+            cd $ins_home
+            clear
+            lamp_menu
+        ;;
+        6)
             # action "安装 kafka-logs..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/kafka-logs_parms'`
@@ -104,7 +115,7 @@ EOF
             clear
             lamp_menu
         ;;
-        6)
+        7)
             clear
             main_menu
         ;;
