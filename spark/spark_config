@@ -1,0 +1,3 @@
+node01 /opt/hadoop /opt/scala true
+node02 /opt/hadoop /opt/scala false
+node03 /opt/hadoop /opt/scala false

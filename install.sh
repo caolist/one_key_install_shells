@@ -37,25 +37,37 @@ cat << EOF
 ----------------------------------------------
 |************请输入你的选择：[1-6]************|
 ----------------------------------------------
-*   `echo -e "\033[36m 1)安装 zookeeper\033[0m"`
-*   `echo -e "\033[36m 2)安装 kafka\033[0m"`
-*   `echo -e "\033[36m 3)安装 elasticsearch\033[0m"`
-*   `echo -e "\033[36m 4)安装 logstash\033[0m"`
-*   `echo -e "\033[36m 5)安装 flink\033[0m"`
-*   `echo -e "\033[36m 6)安装 kafka-logs\033[0m"`
-*   `echo -e "\033[36m 7)返回主菜单\033[0m"`
+*   `echo -e "\033[36m 1)安装 hadoop\033[0m"`
+*   `echo -e "\033[36m 2)安装 zookeeper\033[0m"`
+*   `echo -e "\033[36m 3)安装 kafka\033[0m"`
+*   `echo -e "\033[36m 4)安装 elasticsearch\033[0m"`
+*   `echo -e "\033[36m 5)安装 logstash\033[0m"`
+*   `echo -e "\033[36m 6)安装 spark\033[0m"`
+*   `echo -e "\033[36m 7)安装 flink\033[0m"`
+*   `echo -e "\033[36m 8)安装 kafka-logs\033[0m"`
+*   `echo -e "\033[36m 9)返回主菜单\033[0m"`
 EOF
-    read -p "####请输入安装集群环境菜单功能数字[1-6]：" num2
+    read -p "####请输入安装集群环境菜单功能数字[1-8]：" num2
     # expr $num2 + 1 &>/dev/null  #这里加1，判断输入的是不是整数。
     # if [ $? -ne 0 ];then    #如果不等于零，代表输入不是整数。
     #     echo "###########################"
     #     echo "注意！！非法字符输入。"
-    #     echo "请输入数字[1-6]:"
+    #     echo "请输入数字[1-9]:"
     #     echo "##########################"
     #     sleep 1
     # fi
     case $num2 in
         1)
+            # action "安装 hadoop..." /bin/true
+            # sleep 2
+            CONFIG_VALUE=`read_config 'install_parms/hadoop_parms'`
+            cd hadoop
+            sh hadoop_install.sh $CONFIG_VALUE
+            cd $ins_home
+            clear
+            lamp_menu
+        ;;
+        2)
             # action "安装 zookeeper..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/zk_parms'`
@@ -65,7 +77,7 @@ EOF
             clear
             lamp_menu
         ;;
-        2)
+        3)
             # action "安装 kafka..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/kafka_parms'`
@@ -75,7 +87,7 @@ EOF
             clear
             lamp_menu
         ;;
-        3)
+        4)
             # action "安装 elasticsearch..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/es_parms'`
@@ -85,7 +97,7 @@ EOF
             clear
             lamp_menu
         ;;
-        4)
+        5)
             # action "安装 logstash..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/logstash_parms'`
@@ -95,7 +107,17 @@ EOF
             clear
             lamp_menu
         ;;
-        5)
+        6)
+            # action "安装 spark..." /bin/true
+            # sleep 2
+            CONFIG_VALUE=`read_config 'install_parms/spark_parms'`
+            cd spark
+            sh spark_install.sh $CONFIG_VALUE
+            cd $ins_home
+            clear
+            lamp_menu
+        ;;
+        7)
             # action "安装 flink..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/flink_parms'`
@@ -105,7 +127,7 @@ EOF
             clear
             lamp_menu
         ;;
-        6)
+        8)
             # action "安装 kafka-logs..." /bin/true
             # sleep 2
             CONFIG_VALUE=`read_config 'install_parms/kafka-logs_parms'`
@@ -115,7 +137,7 @@ EOF
             clear
             lamp_menu
         ;;
-        7)
+        9)
             clear
             main_menu
         ;;

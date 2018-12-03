@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/08/03
 # -----------------------------------------------------------------------------
-# shell script for install Kafka (version 2.11-2.0.0)
+# shell script for install kafka (version 2.11-2.0.0)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then
@@ -17,7 +17,7 @@ if [[ $# < 2 ]] ; then
     echo "Usage: $0 1.kafka node config file path(file content format as follows:) 2.kafka version"
     echo "example:"
     echo "./kafka_install.sh kafka_config 2.11-2.0.0"
-    echo "1.host_name 2.kafka_home 3.zk_port 34.broker_id"
+    echo "1.host_name 2.kafka_home 3.zk_port 4.broker_id"
     echo "example:"
     echo "node01 /opt/kafka 2181 1"
     echo "node02 /opt/kafka 2181 2"

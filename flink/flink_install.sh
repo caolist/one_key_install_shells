@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/11/30
 # -----------------------------------------------------------------------------
-# shell script for install flink (version 1.6.2-bin-hadoop27-scala_2.11)
+# shell script for installing flink (version 1.6.2-bin-hadoop27-scala_2.11)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then
@@ -25,7 +25,7 @@ if [[ $# < 2 ]] ; then
     exit
 fi
 
-# es 版本号
+# flink 版本号
 flink_version=$2
 echo $flink_version
 

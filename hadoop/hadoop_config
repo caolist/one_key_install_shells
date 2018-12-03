@@ -1,0 +1,3 @@
+node01 /opt/hadoop true
+node02 /opt/hadoop false
+node03 /opt/hadoop false

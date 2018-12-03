@@ -1,5 +1,5 @@
 #!/bin/bash
-if [[ $# < 2 ]] ; then
+if [[ $# < 1 ]] ; then
     echo "Usage: $0 1.flink_home"
     exit
 fi
