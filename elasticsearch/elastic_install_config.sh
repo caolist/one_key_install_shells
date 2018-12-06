@@ -30,4 +30,5 @@ node.master: $1
 node.data: $2
 http.cors.enabled: true
 http.cors.allow-origin: "*"
+bootstrap.system_call_filter: false
 EOF
