@@ -21,8 +21,8 @@ fi
 # set -x
 
 # 脚本参数解析
-if [[ $# < 3 ]] ; then
-    echo "Usage: $0 1.hadoop node config file path(file content format as follows:) 2.hadoop version 3.jdk_home"
+if [[ $# < 2 ]] ; then
+    echo "Usage: $0 1.hadoop node config file path(file content format as follows:) 2.hadoop version"
     echo "example:"
     echo "./hadoop_install.sh hadoop_config 2.7.7"
     echo "1.host_name 2.hadoop_home 3.is_master"
@@ -207,7 +207,7 @@ echo "-----------------------启动 hadoop----------------------"
 cat $1 | while read line || [ -n "$line" ]
 do
     
-    # 读取 flink 配置文件参数值
+    # 读取 hadoop 配置文件参数值
     host_name=`echo ${line} | awk '{print $1}'`
     hadoop_home=`echo ${line} | awk '{print $2}'`
     is_master=`echo ${line} | awk '{print $3}'`

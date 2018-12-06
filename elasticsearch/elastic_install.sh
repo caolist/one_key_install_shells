@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/07/30
 # -----------------------------------------------------------------------------
-# shell script for install elasticsearch (version 6.2.3)
+# shell script for installing elasticsearch (version 6.2.3)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then
@@ -16,7 +16,7 @@ fi
 if [[ $# < 4 ]] ; then
     echo "Usage: $0 1.es username 2.es cluster name 3.es node config file path(file content format as follows:) 4.es version"
     echo "example:"
-    echo "./elastic_install.sh es ilog es_config 6.3.2"
+    echo "./elastic_install.sh elasticsearch ilog es_config 6.3.2"
     echo "1.host name 2.node name 3.es home 4.data path(multi) 5.log path 6.is master node 7.is data node 8.network host 9.http port 10.transport tcp port 11.java memory size"
     echo "example:"
     echo "node01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 4g"

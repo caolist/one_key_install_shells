@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/08/03
 # -----------------------------------------------------------------------------
-# shell script for install kafka (version 2.11-2.0.0)
+# shell script for installing kafka (version 2.11-2.0.0)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then

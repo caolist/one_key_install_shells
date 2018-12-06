@@ -1,3 +1,3 @@
-node01 /opt/kafka 2181 1
-node02 /opt/kafka 2181 2
-node03 /opt/kafka 2181 3
+hdp01 /opt/kafka 2181 1
+hdp02 /opt/kafka 2181 2
+hdp03 /opt/kafka 2181 3

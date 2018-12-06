@@ -1,7 +1,7 @@
 #/bin/sh
 # created by caoli 2018/08/02
 # -----------------------------------------------------------------------------
-# shell script for install ZooKeeper (version 3.4.12)
+# shell script for installing ZooKeeper (version 3.4.12)
 # -----------------------------------------------------------------------------
 
 if [[ "root" != `whoami` ]] ; then

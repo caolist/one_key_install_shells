@@ -22,14 +22,14 @@ fi
 
 # 脚本参数解析
 if [[ $# < 3 ]] ; then
-    echo "Usage: $0 1.hadoop node config file path(file content format as follows:) 2.hadoop version 3.scala version"
+    echo "Usage: $0 1.spark node config file path(file content format as follows:) 2.spark version 3.scala version"
     echo "example:"
     echo "./spark_install.sh spark_config 2.3.0-bin-hadoop2.7 2.11.12"
     echo "1.host_name 2.hadoop_home 3.scala_home"
     echo "example:"
-    echo "node01 /opt/hadoop /opt/scala"
-    echo "node02 /opt/hadoop /opt/scala"
-    echo "node03 /opt/hadoop /opt/scala"
+    echo "node01 /opt/spark /opt/scala"
+    echo "node02 /opt/spark /opt/scala"
+    echo "node03 /opt/spark /opt/scala"
     exit
 fi
 
@@ -57,7 +57,7 @@ cp spark-${spark_version}/conf/slaves.template spark-${spark_version}/conf/slave
 cat $1 | while read line || [ -n "$line" ]
 do
     
-    # 读取 hadoop 配置文件参数值
+    # 读取 spark 配置文件参数值
     host_name=`echo ${line} | awk '{print $1}'`
     is_master=`echo ${line} | awk '{print $4}'`
     
@@ -113,7 +113,7 @@ done
 # cat $1 | while read line || [ -n "$line" ]
 # do
     
-#     # 读取 flink 配置文件参数值
+#     # 读取 spark 配置文件参数值
 #     host_name=`echo ${line} | awk '{print $1}'`
 #     spark_home=`echo ${line} | awk '{print $2}'`
 #     is_master=`echo ${line} | awk '{print $3}'`
