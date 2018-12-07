@@ -42,9 +42,10 @@ echo "-----------------------开始安装 hadoop----------------------"
 tar -xzf hadoop-${hadoop_version}.tar.gz
 
 # 删除 slaves 配置文件中默认内容
-cp /dev/null hadoop-${hadoop_version}/etc/hadpoop/slaves
+> hadoop-${hadoop_version}/etc/hadoop/slaves
 
 # 修改解压文件中的配置文件内容
+touch tempMaster
 cat $1 | while read line || [ -n "$line" ]
 do
     
@@ -53,20 +54,24 @@ do
     is_master=`echo ${line} | awk '{print $3}'`
     
     if [[ $is_master = "false" ]] ; then
-        echo ${host_name} >> hadoop-${hadoop_version}/etc/hadpoop/slaves
+        echo ${host_name} >> hadoop-${hadoop_version}/etc/hadoop/slaves
     else
         master=${host_name}
+        echo $master >> tempMaster
     fi
     
 done
 
+master==`cat tempMaster | head -1 | awk '{print $1}'`
+rm -rf tempMaster
+
 num_of_slaves=0
-for slave in `cat hadoop-${hadoop_version}/etc/hadpoop/slaves`
+for slave in `cat hadoop-${hadoop_version}/etc/hadoop/slaves`
 do
     num_of_slaves=`expr $num_of_slaves + 1`
 done
 
-sed -i '18,$d' hadoop-${hadoop_version}/etc/hadpoop/core-site.xml
+sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/core-site.xml
 echo "<configuration>
         <property>
         <name>hadoop.tmp.dir</name>
@@ -76,19 +81,19 @@ echo "<configuration>
         <name>fs.defaultFS</name>
         <value>hdfs://$master:9000</value>
         </property>
-</configuration>" >>hadoop-${hadoop_version}/etc/hadpoop/core-site.xml
+</configuration>" >> hadoop-${hadoop_version}/etc/hadoop/core-site.xml
 
-sed -i '18,$d' $HADOOP_HOME/etc/hadoop/hdfs-site.xml
+sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 echo "<configuration>
         <property>
         <name>dfs.replication</name>
         <value>$num_of_slaves</value>
-</property>">>$HADOOP_HOME/etc/hadoop/hdfs-site.xml
+</property>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 echo "<property>
         <name>dfs.namenode.name.dir</name>
         <value>file:$HADOOP_HOME/../hdfs/name</value>
         <final>true</final>
-</property>">>hadoop-${hadoop_version}/etc/hadpoop/hdfs-site.xml
+</property>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 echo " <property>
         <name>dfs.federation.nameservice.id</name>
         <value>ns1</value>
@@ -118,7 +123,7 @@ echo " <property>
         <name>dfs.namenode.secondary.http-address.ns1</name>
         <value>$master:23002</value>
         </property>
-</configuration>">>hadoop-${hadoop_version}/etc/hadpoop/hdfs-site.xml
+</configuration>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
 echo "<configuration>
@@ -134,7 +139,7 @@ echo "<configuration>
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>$master:19888</value>
         </property>
-</configuration>">>hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
+</configuration>" >> hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
 
 if [ ! -f hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml ]
 then
@@ -174,7 +179,7 @@ echo "<configuration>
         <name>yarn.resourcemanager.scheduler.class</name>
         <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
         </property>
-</configuration>">>hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
+</configuration>" >> hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
 
 sed -i "s,^export JAVA_HOME.*,export JAVA_HOME=${JAVA_HOME},g" hadoop-${hadoop_version}/etc/hadoop/hadoop-env.sh
 
@@ -202,23 +207,23 @@ rm -rf /opt/hadoop_install_config.sh
 EOF
 done
 
-echo "-----------------------启动 hadoop----------------------"
-# 修改解压文件中的配置文件内容
-cat $1 | while read line || [ -n "$line" ]
-do
+# echo "-----------------------启动 hadoop----------------------"
+# # 修改解压文件中的配置文件内容
+# cat $1 | while read line || [ -n "$line" ]
+# do
     
-    # 读取 hadoop 配置文件参数值
-    host_name=`echo ${line} | awk '{print $1}'`
-    hadoop_home=`echo ${line} | awk '{print $2}'`
-    is_master=`echo ${line} | awk '{print $3}'`
+#     # 读取 hadoop 配置文件参数值
+#     host_name=`echo ${line} | awk '{print $1}'`
+#     hadoop_home=`echo ${line} | awk '{print $2}'`
+#     is_master=`echo ${line} | awk '{print $3}'`
     
-    if [[ $is_master = "true" ]] ; then
-        ssh -t root@${host_name} << EOF
-sh $hadoop_home/bin/hdfs namenode -format
-sh $hadoop_home/sbin/sbin/start-all.sh -format
-EOF
-    fi
-done
+#     if [[ $is_master = "true" ]] ; then
+#         ssh -t root@${host_name} << EOF
+# sh $hadoop_home/bin/hdfs namenode -format
+# sh $hadoop_home/sbin/sbin/start-all.sh
+# EOF
+#     fi
+# done
 
 # 删除 hadoop 安装文件
 rm -rf hadoop-${hadoop_version}

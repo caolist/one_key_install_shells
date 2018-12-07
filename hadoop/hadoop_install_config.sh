@@ -20,7 +20,8 @@ export YARN_CONF_DIR=$YARN_HOME/etc/hadoop
 source /etc/profile
 
 # 创建数据存放的文件夹
-mkdir $1/tmp
-mkdir $1/hdfs
-mkdir hdfs/data
-mkdir hdfs/name
+mkdir -p $1/tmp
+mkdir -p $1/var
+mkdir -p $1/hdfs
+mkdir -p $1/hdfs/data
+mkdir -p $1/hdfs/name

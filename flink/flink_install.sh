@@ -19,9 +19,9 @@ if [[ $# < 2 ]] ; then
     echo "./flink_install.sh 1.6.2-bin-hadoop27-scala_2.11"
     echo "1.host name 2.flink home 3.is_master 4.port"
     echo "example:"
-    echo "node01 /opt/flink true 8081"
-    echo "node02 /opt/flink true 8081"
-    echo "node05 /opt/flink true 8081"
+    echo "hdp01 /opt/flink true 8081"
+    echo "hdp02 /opt/flink true 8081"
+    echo "hdp03 /opt/flink true 8081"
     exit
 fi
 
@@ -35,8 +35,8 @@ echo "-----------------------开始安装 flink----------------------"
 tar -xzf flink-${flink_version}.tgz
 
 # 删除 masters slaves 配置文件中默认内容
-cp /dev/null flink-${flink_version}/conf/masters
-cp /dev/null flink-${flink_version}/conf/slaves
+> flink-${flink_version}/conf/masters
+> flink-${flink_version}/conf/slaves
 
 # 修改解压文件中的配置文件内容
 cat $1 | while read line || [ -n "$line" ]
@@ -48,7 +48,7 @@ do
     port=`echo ${line} | awk '{print $4}'`
     
     if [[ $is_master = "true" ]] ; then
-        sed -i -e "/^jobmanager.rpc.address: localhost/Ic\jobmanager.rpc.address: $1" flink-${flink_version}/conf/flink-conf.yaml
+        sed -i -e "/^jobmanager.rpc.address: localhost/Ic\jobmanager.rpc.address: ${host_name}" flink-${flink_version}/conf/flink-conf.yaml
         sed -i -e "/^taskmanager.numberOfTaskSlots: 1/Ic\taskmanager.numberOfTaskSlots: 2" flink-${flink_version}/conf/flink-conf.yaml
         echo ''${host_name}':'${port}'' >> flink-${flink_version}/conf/masters
     else
