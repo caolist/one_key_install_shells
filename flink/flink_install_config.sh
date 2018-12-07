@@ -10,6 +10,6 @@ if [[ "root" != `whoami` ]] ; then
 fi
 
 # 配置环境变量
-export FLINK_HOME=/opt/module/$1
-export PATH=$PATH:$FLINK_HOME/bin
+echo "export FLINK_HOME=/opt/module/$1
+export PATH=$PATH:$FLINK_HOME/bin" >> /etc/profile
 source /etc/profile

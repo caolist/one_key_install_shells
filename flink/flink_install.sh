@@ -34,6 +34,8 @@ echo "-----------------------开始安装 flink----------------------"
 # 解压安装 flink
 tar -xzf flink-${flink_version}.tgz
 
+mkdir -p flink-${flink_version}/blob
+
 # 删除 masters slaves 配置文件中默认内容
 > flink-${flink_version}/conf/masters
 > flink-${flink_version}/conf/slaves
@@ -50,6 +52,11 @@ do
     if [[ $is_master = "true" ]] ; then
         sed -i -e "/^jobmanager.rpc.address: localhost/Ic\jobmanager.rpc.address: ${host_name}" flink-${flink_version}/conf/flink-conf.yaml
         sed -i -e "/^taskmanager.numberOfTaskSlots: 1/Ic\taskmanager.numberOfTaskSlots: 2" flink-${flink_version}/conf/flink-conf.yaml
+echo "fs.hdfs.hadoopconf: $HADOOP_HOME/etc/hadoop/conf
+blob.storage.directory: /opt/flink/blob
+fs.hdfs.hdfsdefault: hdfs-default.xml
+fs.hdfs.hdfssite: hdfs-site.xml
+state.checkpoints.num-retained: 15" >> flink-${flink_version}/conf/flink-conf.yaml
         echo ''${host_name}':'${port}'' >> flink-${flink_version}/conf/masters
     else
         echo ${host_name} >> flink-${flink_version}/conf/slaves

@@ -73,72 +73,54 @@ done
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/core-site.xml
 echo "<configuration>
-        <property>
-        <name>hadoop.tmp.dir</name>
-        <value>file:$HADOOP_HOME/data/tmp</value>
-        </property>
-        <property>
-        <name>fs.defaultFS</name>
-        <value>hdfs://$master:9000</value>
-        </property>
+<property>
+    <name>hadoop.tmp.dir</name>
+    <value>/opt/hadoop/tmp</value>
+    <description>Abase for other temporarydirectories.</description>
+</property>
+<property>
+    <name>fs.default.name</name>
+    <value>hdfs://$master:9000</value>
+</property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/core-site.xml
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 echo "<configuration>
-        <property>
-        <name>dfs.replication</name>
-        <value>$num_of_slaves</value>
-</property>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
-echo "<property>
-        <name>dfs.namenode.name.dir</name>
-        <value>file:$HADOOP_HOME/../hdfs/name</value>
-        <final>true</final>
-</property>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
-echo " <property>
-        <name>dfs.federation.nameservice.id</name>
-        <value>ns1</value>
-        </property>
-        <property>
-        <name>dfs.namenode.backup.address.ns1</name>
-        <value>$master:50100</value>
-        </property>
-        <property>
-        <name>dfs.namenode.backup.http-address.ns1</name>
-        <value>$master:50105</value>
-        </property>
-        <property>
-        <name>dfs.namenode.rpc-address.ns1</name>
-        <value>$master:9000</value>
-        </property>
-        <property>
-        <name>dfs.namenode.http-address.ns1</name>
-        <value>$master:23001</value>
-        </property>
-        <property>
-        <name>dfs.datanode.data.dir</name>
-        <value>file:$HADOOP_HOME/../hdfs/data</value>
-        <final>true</final>
-        </property>
-        <property>
-        <name>dfs.namenode.secondary.http-address.ns1</name>
-        <value>$master:23002</value>
-        </property>
+<property>
+  <name>dfs.name.dir</name>
+  <value>/opt/hadoop/hdfs/name</value>
+   <description>Path onthe local filesystem where theNameNode stores the namespace and transactionslogs persistently.</description>
+</property>
+<property>
+  <name>dfs.data.dir</name>
+   <value>/opt/hadoop/hdfs/data</value>
+   <description>Commaseparated list of paths on the localfilesystem of a DataNode where it shouldstore its blocks.</description>
+</property>
+<property>
+  <name>dfs.replication</name>
+  <value>2</value>
+</property>
+<property>
+  <name>dfs.permissions</name>
+  <value>true</value>
+   <description>need notpermissions</description>
+</property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
 echo "<configuration>
-        <property>
-        <name>mapreduce.framework.name</name>
-        <value>yarn</value>
-        </property>
-	 <property>
-        <name>mapreduce.jobhistory.address</name>
-        <value>$master:10020</value>
-        </property>
-	 <property>
-        <name>mapreduce.jobhistory.webapp.address</name>
-        <value>$master:19888</value>
-        </property>
+<property>
+   <name>mapred.job.tracker</name>
+   <value>$master:49001</value>
+</property>
+<property>
+   <name>mapred.local.dir</name>
+   <value>/opt/hadoop/var</value>
+</property>
+<property>
+   <name>mapreduce.framework.name</name>
+   <value>yarn</value>
+</property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
 
 if [ ! -f hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml ]
@@ -151,34 +133,60 @@ fi
 sed -i '15,$d' hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
 echo "<configuration>
 <!-- Site specific YARN configuration properties -->
-        <property>
-        <name>yarn.resourcemanager.address</name>
-        <value>$master:18040</value>
-        </property>
-        <property>
-        <name>yarn.resourcemanager.scheduler.address</name>
-        <value>$master:18030</value>
-        </property>
-        <property>
-        <name>yarn.resourcemanager.webapp.address</name>
-        <value>$master:18088</value>
-        </property>
-        <property>
-        <name>yarn.resourcemanager.admin.address</name>
-        <value>$master:18141</value>
-        </property>
-        <property>
-        <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-        </property>
-        <property>
-        <name>yarn.resourcemanager.resource-tracker.address</name>
-        <value>$master:18025</value>
-        </property>
-        <property>
-        <name>yarn.resourcemanager.scheduler.class</name>
-        <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
-        </property>
+<property>
+   <name>yarn.resourcemanager.hostname</name>
+   <value>$master</value>
+</property>
+<property>
+    <description>Theaddress of the applications manager interface in the RM.</description>
+   <name>yarn.resourcemanager.address</name>
+   <value>${yarn.resourcemanager.hostname}:8032</value>
+</property>
+<property>
+    <description>Theaddress of the scheduler interface.</description>
+   <name>yarn.resourcemanager.scheduler.address</name>
+   <value>${yarn.resourcemanager.hostname}:8030</value>
+</property>
+<property>
+    <description>The http address of the RM webapplication.</description>
+    <name>yarn.resourcemanager.webapp.address</name>
+    <value>${yarn.resourcemanager.hostname}:8088</value>
+</property>
+<property>
+    <description>The https adddress of the RM webapplication.</description>
+    <name>yarn.resourcemanager.webapp.https.address</name>
+    <value>${yarn.resourcemanager.hostname}:8090</value>
+</property>
+<property>
+     <name>yarn.resourcemanager.resource-tracker.address</name>
+    <value>${yarn.resourcemanager.hostname}:8031</value>
+</property>
+<property>
+    <description>The address of the RM admininterface.</description>
+    <name>yarn.resourcemanager.admin.address</name>
+    <value>${yarn.resourcemanager.hostname}:8033</value>
+</property>
+<property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+</property>
+<property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>2048</value>
+     <discription>每个节点可用内存,单位MB,默认8182MB</discription>
+</property>
+<property>
+    <name>yarn.nodemanager.vmem-pmem-ratio</name>
+    <value>2.1</value>
+</property>
+<property>
+   <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>2048</value>
+</property>
+<property>
+   <name>yarn.nodemanager.vmem-check-enabled</name>
+   <value>false</value>
+</property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
 
 sed -i "s,^export JAVA_HOME.*,export JAVA_HOME=${JAVA_HOME},g" hadoop-${hadoop_version}/etc/hadoop/hadoop-env.sh
@@ -219,7 +227,7 @@ done
     
 #     if [[ $is_master = "true" ]] ; then
 #         ssh -t root@${host_name} << EOF
-# sh $hadoop_home/bin/hdfs namenode -format
+# sh $hadoop_home/bin/hadoop namenode -format
 # sh $hadoop_home/sbin/sbin/start-all.sh
 # EOF
 #     fi
