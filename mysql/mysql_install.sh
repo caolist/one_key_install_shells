@@ -119,6 +119,7 @@ mysql -u root -proot --connect-expired-password -e "SET PASSWORD = PASSWORD('roo
 
 # 允许远程连接
 mysql -u root -proot -e "use mysql;update user set host = '%' where user ='root';"
+mysql -u root -proot -e "flush privileges;"
 
 # echo "-----------------------导入基础数据----------------------"
 # cd $mysql_ins_home

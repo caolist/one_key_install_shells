@@ -172,7 +172,7 @@ echo "<configuration>
 </property>
 <property>
     <name>yarn.scheduler.maximum-allocation-mb</name>
-    <value>2048</value>
+    <value>8182</value>
      <discription>每个节点可用内存,单位MB,默认8182MB</discription>
 </property>
 <property>
@@ -181,7 +181,7 @@ echo "<configuration>
 </property>
 <property>
    <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>2048</value>
+    <value>8182</value>
 </property>
 <property>
    <name>yarn.nodemanager.vmem-check-enabled</name>
