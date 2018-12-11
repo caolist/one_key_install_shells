@@ -56,70 +56,71 @@ do
     if [[ $is_master = "false" ]] ; then
         echo ${host_name} >> hadoop-${hadoop_version}/etc/hadoop/slaves
     else
+        echo ${host_name} >> hadoop-${hadoop_version}/etc/hadoop/slaves
         master=${host_name}
         echo $master >> tempMaster
     fi
     
 done
 
-master==`cat tempMaster | head -1 | awk '{print $1}'`
+master=`cat tempMaster | head -1 | awk '{print $1}'`
 rm -rf tempMaster
 
-num_of_slaves=0
-for slave in `cat hadoop-${hadoop_version}/etc/hadoop/slaves`
-do
-    num_of_slaves=`expr $num_of_slaves + 1`
-done
+# num_of_slaves=0
+# for slave in `cat hadoop-${hadoop_version}/etc/hadoop/slaves`
+# do
+#     num_of_slaves=`expr $num_of_slaves + 1`
+# done
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/core-site.xml
 echo "<configuration>
 <property>
-    <name>hadoop.tmp.dir</name>
-    <value>/opt/hadoop/tmp</value>
-    <description>Abase for other temporarydirectories.</description>
+<name>hadoop.tmp.dir</name>
+<value>/home/hadoop/tmp</value>
 </property>
 <property>
-    <name>fs.default.name</name>
-    <value>hdfs://$master:9000</value>
+<name>fs.default.name</name>
+<value>hdfs://$master:9000</value>
+</property>
+<property>
+<name>io.file.buffer.size</name>
+<value>131072</value>
 </property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/core-site.xml
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 echo "<configuration>
 <property>
-  <name>dfs.name.dir</name>
-  <value>/opt/hadoop/hdfs/name</value>
-   <description>Path onthe local filesystem where theNameNode stores the namespace and transactionslogs persistently.</description>
+<name>dfs.name.dir</name>
+<value>/home/hadoop/hdfs/name</value>
 </property>
 <property>
-  <name>dfs.data.dir</name>
-   <value>/opt/hadoop/hdfs/data</value>
-   <description>Commaseparated list of paths on the localfilesystem of a DataNode where it shouldstore its blocks.</description>
+<name>dfs.data.dir</name>
+<value>/home/hadoop/hdfs/data</value>
 </property>
 <property>
-  <name>dfs.replication</name>
-  <value>2</value>
+<name>dfs.replication</name>
+<value>2</value>
 </property>
 <property>
-  <name>dfs.permissions</name>
-  <value>true</value>
-   <description>need notpermissions</description>
+<name>dfs.permissions</name>
+<value>true</value>
 </property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/hdfs-site.xml
 
 sed -i '18,$d' hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
 echo "<configuration>
 <property>
-   <name>mapred.job.tracker</name>
-   <value>$master:49001</value>
+<name>mapred.job.tracker</name>
+<value>$master:49001</value>
 </property>
 <property>
-   <name>mapred.local.dir</name>
-   <value>/opt/hadoop/var</value>
+<name>mapred.local.dir</name>
+<value>/home/hadoop/var</value>
 </property>
 <property>
-   <name>mapreduce.framework.name</name>
-   <value>yarn</value>
+<name>mapreduce.framework.name</name>
+<value>yarn</value>
 </property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/mapred-site.xml.template
 
@@ -132,60 +133,55 @@ fi
 
 sed -i '15,$d' hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
 echo "<configuration>
-<!-- Site specific YARN configuration properties -->
 <property>
-   <name>yarn.resourcemanager.hostname</name>
-   <value>$master</value>
+<name>yarn.resourcemanager.hostname</name>
+<value>$master</value>
 </property>
 <property>
-    <description>Theaddress of the applications manager interface in the RM.</description>
-   <name>yarn.resourcemanager.address</name>
-   <value>${yarn.resourcemanager.hostname}:8032</value>
+<name>yarn.resourcemanager.address</name>
+<value>${yarn.resourcemanager.hostname}:8032</value>
 </property>
 <property>
-    <description>Theaddress of the scheduler interface.</description>
-   <name>yarn.resourcemanager.scheduler.address</name>
-   <value>${yarn.resourcemanager.hostname}:8030</value>
+<name>yarn.resourcemanager.scheduler.address</name>
+<value>${yarn.resourcemanager.hostname}:8030</value>
 </property>
 <property>
-    <description>The http address of the RM webapplication.</description>
-    <name>yarn.resourcemanager.webapp.address</name>
-    <value>${yarn.resourcemanager.hostname}:8088</value>
+<name>yarn.resourcemanager.webapp.address</name>
+<value>${yarn.resourcemanager.hostname}:8088</value>
+</property>" >> hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
+
+echo "<property>
+<name>yarn.resourcemanager.webapp.https.address</name>
+<value>${yarn.resourcemanager.hostname}:8090</value>
 </property>
 <property>
-    <description>The https adddress of the RM webapplication.</description>
-    <name>yarn.resourcemanager.webapp.https.address</name>
-    <value>${yarn.resourcemanager.hostname}:8090</value>
+<name>yarn.resourcemanager.resource-tracker.address</name>
+<value>${yarn.resourcemanager.hostname}:8031</value>
 </property>
 <property>
-     <name>yarn.resourcemanager.resource-tracker.address</name>
-    <value>${yarn.resourcemanager.hostname}:8031</value>
+<name>yarn.resourcemanager.admin.address</name>
+<value>${yarn.resourcemanager.hostname}:8033</value>
+</property>" >> hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
+
+echo "<property>
+<name>yarn.nodemanager.aux-services</name>
+<value>mapreduce_shuffle</value>
 </property>
 <property>
-    <description>The address of the RM admininterface.</description>
-    <name>yarn.resourcemanager.admin.address</name>
-    <value>${yarn.resourcemanager.hostname}:8033</value>
+<name>yarn.scheduler.maximum-allocation-mb</name>
+<value>32768</value>
 </property>
 <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
+<name>yarn.nodemanager.vmem-pmem-ratio</name>
+<value>2.1</value>
 </property>
 <property>
-    <name>yarn.scheduler.maximum-allocation-mb</name>
-    <value>8182</value>
-     <discription>每个节点可用内存,单位MB,默认8182MB</discription>
+<name>yarn.nodemanager.resource.memory-mb</name>
+<value>32768</value>
 </property>
 <property>
-    <name>yarn.nodemanager.vmem-pmem-ratio</name>
-    <value>2.1</value>
-</property>
-<property>
-   <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>8182</value>
-</property>
-<property>
-   <name>yarn.nodemanager.vmem-check-enabled</name>
-   <value>false</value>
+<name>yarn.nodemanager.vmem-check-enabled</name>
+<value>false</value>
 </property>
 </configuration>" >> hadoop-${hadoop_version}/etc/hadoop/yarn-site.xml
 
