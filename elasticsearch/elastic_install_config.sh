@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ $# < 11 ]] ; then
-    echo "Usage: $0 1.cluster_name 2.node_name 3.data_path 4.log_path 5.network_host 6.http_port 7.transport_tcp_port 8.zen_hosts 9.es_home 10.is_master_node 11.is_master_node"
+    echo "Usage: $0 1.cluster_name 2.node_name 3.data_path 4.log_path 5.network_host 6.http_port 7.transport_tcp_port 8.zen_hosts 9.es_home 10.is_master_node 11.is_data_node"
     exit
 fi
 
@@ -31,4 +31,6 @@ node.data: $2
 http.cors.enabled: true
 http.cors.allow-origin: "*"
 bootstrap.system_call_filter: false
+transport.tcp.port: 9300
+transport.tcp.compress: true
 EOF

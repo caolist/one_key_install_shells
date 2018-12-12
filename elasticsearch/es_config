@@ -1,3 +1,3 @@
-es01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 2g
-es02 esnode02 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 1g
-es03 esnode03 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 1g
+es01 esnode01 /opt/elasticsearch /home/es/data01,/home/es/data02 /home/es/logs true true 0.0.0.0 9200 9300 32g
+es02 esnode02 /opt/elasticsearch /home/es/data01,/home/es/data02 /home/es/logs false true 0.0.0.0 9200 9300 32g
+es03 esnode03 /opt/elasticsearch /home/es/data01,/home/es/data02 /home/es/logs false true 0.0.0.0 9200 9300 32g

@@ -19,9 +19,9 @@ if [[ $# < 4 ]] ; then
     echo "./elastic_install.sh elasticsearch ilog es_config 6.3.2"
     echo "1.host name 2.node name 3.es home 4.data path(multi) 5.log path 6.is master node 7.is data node 8.network host 9.http port 10.transport tcp port 11.java memory size"
     echo "example:"
-    echo "node01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 4g"
-    echo "node02 esnode02 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 512m"
-    echo "node02 esnode03 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 512m"
+    echo "node01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 32g"
+    echo "node02 esnode02 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 32g"
+    echo "node02 esnode03 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 32g"
     exit
 fi
 
@@ -79,7 +79,7 @@ EOF
     # 添加 es 用户，建立数据日志目录并赋予权限,接着启动 es 服务
     ssh -t root@${host_name} << EOF
 sh /opt/elastic_install_env.sh $1 $es_home $data_path $log_path
-sh /opt/elastic_install_config.sh $cluster_name $node_name $data_path $log_path $network_host $http_port $transport_tcp_port $zen_hosts $es_home $is_master_node $is_master_node
+sh /opt/elastic_install_config.sh $cluster_name $node_name $data_path $log_path $network_host $http_port $transport_tcp_port $zen_hosts $es_home $is_master_node $is_data_node
 sh /opt/elastic_install_jvm.sh ${es_home}"/config/jvm.options" $java_mem_size
 
 rm -rf /opt/elastic_install_env.sh
