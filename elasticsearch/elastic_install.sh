@@ -19,9 +19,9 @@ if [[ $# < 4 ]] ; then
     echo "./elastic_install.sh elasticsearch ilog es_config 6.3.2"
     echo "1.host name 2.node name 3.es home 4.data path(multi) 5.log path 6.is master node 7.is data node 8.network host 9.http port 10.transport tcp port 11.java memory size"
     echo "example:"
-    echo "node01 esnode01 /opt/elasticsearch /es/data01,/es/data02 /es/logs true true 0.0.0.0 9200 9300 32g"
-    echo "node02 esnode02 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 32g"
-    echo "node02 esnode03 /opt/elasticsearch /es/data01,/es/data02 /es/logs false true 0.0.0.0 9200 9300 32g"
+    echo "node01 esnode01 /opt/elasticsearch /home/es/data01,/home/es/data02 /home/es/logs true true 0.0.0.0 9200 9300 32g"
+    echo "node02 esnode02 /opt/elasticsearch /home/es/data01,/home/es/data02 /home/es/logs false true 0.0.0.0 9200 9300 32g"
+    echo "node02 esnode03 /opt/elasticsearch /home/es/data01,/home/es/data02 /home/es/logs false true 0.0.0.0 9200 9300 32g"
     exit
 fi
 

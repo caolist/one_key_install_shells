@@ -19,9 +19,9 @@ if [[ $# < 2 ]] ; then
     echo "./flink_install.sh 1.6.2-bin-hadoop27-scala_2.11"
     echo "1.host name 2.flink home 3.is_master 4.port"
     echo "example:"
-    echo "hdp01 /opt/flink true 8081"
-    echo "hdp02 /opt/flink true 8081"
-    echo "hdp03 /opt/flink true 8081"
+    echo "hdp01 /home/flink true 8081"
+    echo "hdp02 /home/flink true 8081"
+    echo "hdp03 /home/flink true 8081"
     exit
 fi
 
@@ -53,7 +53,7 @@ do
         sed -i -e "/^jobmanager.rpc.address: localhost/Ic\jobmanager.rpc.address: ${host_name}" flink-${flink_version}/conf/flink-conf.yaml
         sed -i -e "/^taskmanager.numberOfTaskSlots: 1/Ic\taskmanager.numberOfTaskSlots: 2" flink-${flink_version}/conf/flink-conf.yaml
 echo "fs.hdfs.hadoopconf: $HADOOP_HOME/etc/hadoop/conf
-blob.storage.directory: /opt/flink/blob
+blob.storage.directory: /home/flink/blob
 fs.hdfs.hdfsdefault: hdfs-default.xml
 fs.hdfs.hdfssite: hdfs-site.xml
 state.checkpoints.num-retained: 15" >> flink-${flink_version}/conf/flink-conf.yaml
